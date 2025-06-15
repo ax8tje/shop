@@ -24,4 +24,11 @@ document.addEventListener('DOMContentLoaded', () => {
 
         updateSlider();
     });
+
+    document.querySelectorAll('.buy-button').forEach(btn => {
+        btn.addEventListener('click', () => {
+            const productId = btn.dataset.id;
+            alert(`Produkt ${productId} dodany do koszyka!`);
+        });
+    });
 });

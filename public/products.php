@@ -44,12 +44,25 @@ try {
 <body>
 <div class="navbar">
     <div class="navbar-start">
+        <div class="burger-menu" id="burgerToggle">
+            <img src="assets/img/burger-menu-white.png" id="burgerIcon">
+        </div>
         <h1>moko.store</h1>
     </div>
-    <div class="navbar-end">
 
+    <div class="navbar-end">
     </div>
 </div>
+
+<div class="side-menu" id="sideMenu">
+    <div class="slide-menu-content">
+        <a href="landing_page.php">Strona główna</a>
+        <a href="products.php">Produkty</a>
+        <a href="contact.php">Kontakt</a>
+    </div>
+</div>
+
+
 <div class="products-container">
     <?php if (empty($products)) : ?>
         <p>Brak produktów w bazie.</p>
@@ -59,11 +72,13 @@ try {
                 <h2><?php echo htmlspecialchars($product['title']); ?></h2>
 
                 <?php if (!empty($product['images'])): ?>
-                    <div class="image-slider">
+                    <div class="image-slider1">
                         <button class="slide-arrow left-arrow">&lt;</button>
                         <div class="slider-images">
                             <?php foreach ($product['images'] as $img): ?>
-                                <img src="assets/<?php echo htmlspecialchars($img); ?>" alt="<?php echo htmlspecialchars($product['title']); ?>" class="slide-image" />
+                                <a href="product.php?id=<?php echo $pid; ?>">
+                                    <img src="assets/img/<?php echo htmlspecialchars($img); ?>" alt="<?php echo htmlspecialchars($product['title']); ?>" class="slide-image1" />
+                                </a>
                             <?php endforeach; ?>
                         </div>
                         <button class="slide-arrow right-arrow">&gt;</button>
@@ -74,15 +89,19 @@ try {
 
                 <p><?php echo nl2br(htmlspecialchars($product['description'])); ?></p>
                 <p><strong>Cena:</strong> <?php echo htmlspecialchars($product['price']); ?> zł</p>
-                <hr>
-                <button class="buy-button">Kup</button> <button class="cart-button-product"></button>
+                <div class="product-container-buttons">
+                    <button class="buy-button">Kup</button>
+                    <button class="cart-button-product no-img"></button>
+                </div>
             </div>
+
         <?php endforeach; ?>
     <?php endif; ?>
 </div>
 <div class="footer">
 
 </div>
-<script src="assets/js/script1.js"></script>
+<script src="assets/js/script_products_container.js"></script>
+<script src="assets/js/script_burger_menu.js"></script>
 </body>
 </html>
