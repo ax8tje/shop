@@ -38,7 +38,9 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             <div class="burger-menu" id="burgerToggle">
                 <img src="assets/img/burger-menu-white.png" id="burgerIcon">
             </div>
-            <h1>moko.store</h1>
+            <h1>
+                <a href="landing_page.php" class="logo-link">moko.store</a>
+            </h1>
         </div>
 
         <div class="navbar-end">

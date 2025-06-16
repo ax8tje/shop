@@ -1,9 +1,9 @@
 document.addEventListener('DOMContentLoaded', () => {
-    document.querySelectorAll('.image-slider').forEach(slider => {
+    document.querySelectorAll('.image-slider1').forEach(slider => {
         const sliderImages = slider.querySelector('.slider-images');
-        const images = slider.querySelectorAll('.slide-image');
-        const leftArrow = slider.querySelector('.left-arrow');
-        const rightArrow = slider.querySelector('.right-arrow');
+        const images = slider.querySelectorAll('.slide-image1');
+        const leftArrow = slider.querySelector('.left-arrow1');
+        const rightArrow = slider.querySelector('.right-arrow1');
 
         let currentIndex = 0;
 
