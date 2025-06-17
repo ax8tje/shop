@@ -16,7 +16,7 @@ document.addEventListener('DOMContentLoaded', () => {
         const maxVisibleThumbs = 5;
 
         function updateSlider() {
-            const offset = -currentIndex * 500;
+            const offset = -currentIndex * 600;
             sliderImages.style.transform = `translateX(${offset}px)`;
 
             thumbnails.forEach((thumb, index) => {

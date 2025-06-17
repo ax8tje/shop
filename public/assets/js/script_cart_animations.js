@@ -1,5 +1,5 @@
 document.addEventListener("DOMContentLoaded", () => {
-    const products = document.querySelectorAll(".product, .title");
+    const products = document.querySelectorAll(".cart-box, .title1");
 
     const observer = new IntersectionObserver((entries, observer) => {
         entries.forEach(entry => {

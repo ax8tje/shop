@@ -1,43 +1,61 @@
 <?php
 require_once '../includes/db.php';
 
-try {
-    $stmt = $pdo->query("
-        SELECT p.id, p.title, p.price, p.description, pi.image_path
-        FROM products p
-        LEFT JOIN product_images pi ON p.id = pi.product_id
-        ORDER BY p.id, pi.id
-    ");
+// Pobranie kategorii do filtra
+$stmtCats = $pdo->query("SELECT id, name FROM categories ORDER BY name");
+$categories = $stmtCats->fetchAll(PDO::FETCH_ASSOC);
 
-    $products = [];
+// Odczyt parametru filtra
+$filterCat = isset($_GET['category']) ? (int)$_GET['category'] : null;
 
-    while ($row = $stmt->fetch(PDO::FETCH_ASSOC)) {
-        $pid = $row['id'];
+// Budowa zapytania z przygotowaniem
+$sql = "
+    SELECT
+        p.id,
+        p.title,
+        p.price,
+        p.quantity,
+        p.description,
+        pi.image_path
+    FROM products p
+    LEFT JOIN product_images pi ON p.id = pi.product_id
+";
+if ($filterCat) {
+    $sql .= " WHERE p.category_id = :cat";
+}
+$sql .= " ORDER BY p.id, pi.id";
 
-        if (!isset($products[$pid])) {
-            $products[$pid] = [
-                'title' => $row['title'],
-                'price' => $row['price'],
-                'description' => $row['description'],
-                'images' => []
-            ];
-        }
+// Przygotowanie i wykonanie
+$stmt = $pdo->prepare($sql);
+if ($filterCat) {
+    $stmt->execute(['cat' => $filterCat]);
+} else {
+    $stmt->execute();
+}
 
-        if (!empty($row['image_path'])) {
-            $products[$pid]['images'][] = $row['image_path'];
-        }
+// Agregacja wyników w tablicę produktów
+$products = [];
+while ($row = $stmt->fetch(PDO::FETCH_ASSOC)) {
+    $pid = $row['id'];
+    if (!isset($products[$pid])) {
+        $products[$pid] = [
+            'title'       => $row['title'],
+            'price'       => $row['price'],
+            'quantity'    => $row['quantity'],
+            'description' => $row['description'],
+            'images'      => []
+        ];
     }
-
-} catch (PDOException $e) {
-    echo "Błąd zapytania: " . $e->getMessage();
-    exit;
+    if (!empty($row['image_path'])) {
+        $products[$pid]['images'][] = $row['image_path'];
+    }
 }
 ?>
 <!DOCTYPE html>
 <html lang="pl">
 <head>
     <meta charset="UTF-8" />
-    <title>MOKO</title>
+    <title>Produkty – MOKO</title>
     <link rel="stylesheet" href="assets/css/style.css" />
     <link href="https://fonts.googleapis.com/css2?family=Roboto:ital,wght@0,100..900;1,100..900&display=swap" rel="stylesheet">
 </head>
@@ -46,22 +64,13 @@ try {
     <div class="navbar">
         <div class="navbar-start">
             <div class="burger-menu" id="burgerToggle">
-                <img src="assets/img/burger-menu-white.png" id="burgerIcon">
+                <img src="assets/img/burger-menu-white.png" id="burgerIcon" alt="Menu">
             </div>
-            <h1>
-                <a href="landing_page.php" class="logo-link">moko.store</a>
-            </h1>
-
+            <h1><a href="landing_page.php" class="logo-link">moko.store</a></h1>
         </div>
-
         <div class="navbar-end">
-            <a href="profile.php" class="navbar-icon">
-                <img src="assets/img/profile-icon.png" alt="Profile" />
-            </a>
-
-            <a href="cart.php" class="navbar-icon">
-                <img src="assets/img/shopping-cart1.png" alt="Cart" />
-            </a>
+            <a href="profile.php" class="navbar-icon"><img src="assets/img/profile-icon.png" alt="Profile"></a>
+            <a href="cart.php"    class="navbar-icon"><img src="assets/img/shopping-cart1.png" alt="Cart"></a>
         </div>
     </div>
 
@@ -73,43 +82,63 @@ try {
         </div>
     </div>
 
-    <h1 class="title">Produkty</h1>
+    <main class="main-content">
+        <div class="category-filter">
+            <form method="get" class="category-filter-form">
+                <button type="submit" name="category" value="" <?= $filterCat===null ? 'class="active"' : '' ?>>Wszystkie</button>
+                <?php foreach ($categories as $cat): ?>
+                    <button
+                            type="submit"
+                            name="category"
+                            value="<?= $cat['id']; ?>"
+                        <?= $filterCat===(int)$cat['id'] ? 'class="active"' : '' ?>
+                    >
+                        <?= htmlspecialchars($cat['name']); ?>
+                    </button>
+                <?php endforeach; ?>
+            </form>
+        </div>
 
-    <div class="products-container">
-        <?php if (empty($products)) : ?>
-            <p>Brak produktów w bazie.</p>
-        <?php else: ?>
-            <?php foreach ($products as $pid => $product): ?>
-                <div class="product" data-product-id="<?php echo $pid; ?>">
-                    <h2><?php echo htmlspecialchars($product['title']); ?></h2>
+        <div class="products-container">
+            <?php if (empty($products)): ?>
+                <p>Brak produktów w tej kategorii.</p>
+            <?php else: ?>
+                <?php foreach ($products as $pid => $product): ?>
+                    <div class="product" data-product-id="<?= $pid; ?>">
+                        <h2><?= htmlspecialchars($product['title']); ?></h2>
 
-                    <?php if (!empty($product['images'])): ?>
-                        <div class="image-slider1">
-                            <button class="slide-arrow1 left-arrow1">&lt;</button>
-                            <div class="slider-images">
-                                <?php foreach ($product['images'] as $img): ?>
-                                    <a href="product.php?id=<?php echo $pid; ?>">
-                                        <img src="assets/img/<?php echo htmlspecialchars($img); ?>" alt="<?php echo htmlspecialchars($product['title']); ?>" class="slide-image1" />
-                                    </a>
-                                <?php endforeach; ?>
+                        <?php if (!empty($product['images'])): ?>
+                            <div class="image-slider1">
+                                <button class="slide-arrow1 left-arrow1" aria-label="Poprzednie">&lt;</button>
+                                <div class="slider-images">
+                                    <?php foreach ($product['images'] as $img): ?>
+                                        <a href="product.php?id=<?= $pid; ?>">
+                                            <img
+                                                    src="assets/img/<?= htmlspecialchars($img); ?>"
+                                                    class="slide-image1"
+                                                    alt="<?= htmlspecialchars($product['title']); ?>">
+                                        </a>
+                                    <?php endforeach; ?>
+                                </div>
+                                <button class="slide-arrow1 right-arrow1" aria-label="Następne">&gt;</button>
                             </div>
-                            <button class="slide-arrow1 right-arrow1">&gt;</button>
+                        <?php endif; ?>
+
+                        <p><?= nl2br(htmlspecialchars($product['description'])); ?></p>
+                        <p><strong>Cena:</strong> <?= number_format($product['price'], 2); ?> zł</p>
+                        <p><strong>Ilość:</strong> <?= htmlspecialchars($product['quantity']); ?></p>
+
+                        <div class="product-container-buttons">
+                            <form method="post" action="add_to_cart.php">
+                                <input type="hidden" name="product_id" value="<?= $pid; ?>">
+                                <button type="submit" class="buy-button1">Kup</button>
+                            </form>
                         </div>
-                    <?php else: ?>
-                        <p>Brak zdjęć produktu.</p>
-                    <?php endif; ?>
-
-                    <p><?php echo nl2br(htmlspecialchars($product['description'])); ?></p>
-                    <p><strong>Cena:</strong> <?php echo htmlspecialchars($product['price']); ?> zł</p>
-                    <div class="product-container-buttons">
-                        <button class="buy-button">Kup</button>
-                        <button class="cart-button-product no-img"></button>
                     </div>
-                </div>
-
-            <?php endforeach; ?>
-        <?php endif; ?>
-    </div>
+                <?php endforeach; ?>
+            <?php endif; ?>
+        </div>
+    </main>
 </div>
 <footer class="footer">
     <div class="footer-container">
@@ -118,20 +147,12 @@ try {
             <p>Email: <a href="mailto:kontakt@moko.store">kontakt@moko.store</a></p>
             <p>Telefon: <a href="tel:+48123456789">+48 123 456 789</a></p>
         </div>
-
         <div class="footer-social">
             <h3>Znajdź nas</h3>
-            <a href="#" aria-label="Facebook" class="social-link">
-                <img src="assets/img/facebook.png" alt="Facebook" />
-            </a>
-            <a href="#" aria-label="Instagram" class="social-link">
-                <img src="assets/img/instagram.png" alt="Instagram" />
-            </a>
-            <a href="#" aria-label="Pinterest" class="social-link">
-                <img src="assets/img/pinterest.png" alt="Pinterest" />
-            </a>
+            <a href="#" aria-label="Facebook"><img src="assets/img/facebook.png" alt="Facebook"></a>
+            <a href="#" aria-label="Instagram"><img src="assets/img/instagram.png" alt="Instagram"></a>
+            <a href="#" aria-label="Pinterest"><img src="assets/img/pinterest.png" alt="Pinterest"></a>
         </div>
-
         <div class="footer-copy">
             <p>© 2025 moko.store. Wszelkie prawa zastrzeżone.</p>
         </div>

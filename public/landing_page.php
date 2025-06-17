@@ -38,29 +38,29 @@
     </div>
 
     <main class="landing-content">
-        <section class="hero">
+        <section class="hero hidden">
             <h2>Unikalna ceramika z pasją</h2>
             <p>Witaj w <strong>moko.store</strong> – miejscu, gdzie każda gliniana praca to ręcznie tworzony mały świat.</p><br>
             <a href="products.php" class="hero-button">Zobacz nasze produkty</a>
         </section>
 
-        <section class="about">
+        <section class="about hidden">
             <h3>O nas</h3>
             <p>Jesteśmy rodzinną pracownią ceramiki, w której każda filiżanka, misa czy wazon powstaje z miłością do detalu. Wierzymy w prostotę, jakość i piękno przedmiotów codziennego użytku.</p>
         </section>
 
         <section class="highlights">
-            <div class="highlight-item">
+            <div class="highlight-item hidden">
                 <img src="assets/img/glina1/1.jpg" alt="Produkt" />
                 <h4>Ręczne wykonanie</h4>
                 <p>Każdy produkt tworzony jest ręcznie – nie znajdziesz dwóch identycznych.</p>
             </div>
-            <div class="highlight-item">
+            <div class="highlight-item hidden">
                 <img src="assets/img/glina2/2.jpg" alt="Produkt" />
                 <h4>Naturalne materiały</h4>
                 <p>Używamy tylko gliny i szkliw przyjaznych środowisku.</p>
             </div>
-            <div class="highlight-item">
+            <div class="highlight-item hidden">
                 <img src="assets/img/glina3/2.jpg" alt="Produkt" />
                 <h4>Warsztaty ceramiczne</h4>
                 <p>Dołącz do naszych warsztatów i stwórz własne unikalne dzieło z gliny!</p>
@@ -95,7 +95,7 @@
         </div>
     </div>
 </footer>
-
+<script src="assets/js/script_landing_animations.js"></script>
 <script src="assets/js/script_burger_menu.js"></script>
 </body>
 </html>

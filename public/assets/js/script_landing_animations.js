@@ -1,5 +1,6 @@
 document.addEventListener("DOMContentLoaded", () => {
-    const products = document.querySelectorAll(".product, .title");
+    const products = document.querySelectorAll(".product");
+    const extraElements = document.querySelectorAll(".hero, .about, .highlight-item");
 
     const observer = new IntersectionObserver((entries, observer) => {
         entries.forEach(entry => {
@@ -12,7 +13,6 @@ document.addEventListener("DOMContentLoaded", () => {
         threshold: 0.1
     });
 
-    products.forEach(product => {
-        observer.observe(product);
-    });
+    products.forEach(product => observer.observe(product));
+    extraElements.forEach(el => observer.observe(el));
 });
