@@ -2,20 +2,18 @@
 require_once '../includes/db.php';
 
 // Pobranie kategorii do filtra
-$stmtCats = $pdo->query("SELECT id, name FROM categories ORDER BY name");
+$stmtCats   = $pdo->query("SELECT id, name FROM categories ORDER BY name");
 $categories = $stmtCats->fetchAll(PDO::FETCH_ASSOC);
 
-// Odczyt parametru filtra
-if (isset($_GET['category']) && $_GET['category'] !== '') {
-    $filterCat = (int)$_GET['category'];
-} else {
-    $filterCat = null;
-}
+// Odczyt parametrów GET
+$filterCat  = (isset($_GET['category']) && $_GET['category'] !== '')
+    ? (int) $_GET['category']
+    : null;
+$searchTerm = isset($_GET['search'])
+    ? trim($_GET['search'])
+    : '';
 
-$searchTerm = isset($_GET['search']) ? trim($_GET['search']) : '';
-
-
-// Budowa zapytania z przygotowaniem
+// Budowa podstawowego SQL
 $sql = "
     SELECT
         p.id,
@@ -29,29 +27,32 @@ $sql = "
 ";
 
 $conditions = [];
-$params = [];
+$params     = [];
 
+// Dodaj warunek kategorii
 if ($filterCat) {
-    $sql .= " WHERE p.category_id = :cat";
+    $conditions[]     = "p.category_id = :cat";
+    $params['cat']    = $filterCat;
 }
 
+// Dodaj warunek wyszukiwania
 if ($searchTerm !== '') {
-    $conditions[] = "(p.title LIKE :term OR p.description LIKE :term)";
-    $params['term'] = "%{$searchTerm}%";
+    $conditions[]      = "(p.title LIKE :term OR p.description LIKE :term)";
+    $params['term']    = "%{$searchTerm}%";
+}
+
+// Jeśli mamy jakiekolwiek warunki, doklej je do zapytania
+if (!empty($conditions)) {
+    $sql .= ' WHERE ' . implode(' AND ', $conditions);
 }
 
 $sql .= " ORDER BY p.id, pi.id";
 
-// Przygotowanie i wykonanie
+// Przygotowanie i jednokrotne wykonanie z wszystkimi parametrami
 $stmt = $pdo->prepare($sql);
 $stmt->execute($params);
-if ($filterCat) {
-    $stmt->execute(['cat' => $filterCat]);
-} else {
-    $stmt->execute();
-}
 
-// Agregacja wyników w tablicę produktów
+// Agregacja wyników
 $products = [];
 while ($row = $stmt->fetch(PDO::FETCH_ASSOC)) {
     $pid = $row['id'];
@@ -61,15 +62,13 @@ while ($row = $stmt->fetch(PDO::FETCH_ASSOC)) {
             'price'       => $row['price'],
             'quantity'    => $row['quantity'],
             'description' => $row['description'],
-            'images'      => []
+            'images'      => [],
         ];
     }
     if (!empty($row['image_path'])) {
         $products[$pid]['images'][] = $row['image_path'];
     }
 }
-
-
 ?>
 <!DOCTYPE html>
 <html lang="pl">
