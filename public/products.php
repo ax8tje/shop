@@ -12,6 +12,8 @@ if (isset($_GET['category']) && $_GET['category'] !== '') {
     $filterCat = null;
 }
 
+$searchTerm = isset($_GET['search']) ? trim($_GET['search']) : '';
+
 
 // Budowa zapytania z przygotowaniem
 $sql = "
@@ -25,13 +27,24 @@ $sql = "
     FROM products p
     LEFT JOIN product_images pi ON p.id = pi.product_id
 ";
+
+$conditions = [];
+$params = [];
+
 if ($filterCat) {
     $sql .= " WHERE p.category_id = :cat";
 }
+
+if ($searchTerm !== '') {
+    $conditions[] = "(p.title LIKE :term OR p.description LIKE :term)";
+    $params['term'] = "%{$searchTerm}%";
+}
+
 $sql .= " ORDER BY p.id, pi.id";
 
 // Przygotowanie i wykonanie
 $stmt = $pdo->prepare($sql);
+$stmt->execute($params);
 if ($filterCat) {
     $stmt->execute(['cat' => $filterCat]);
 } else {
@@ -55,6 +68,8 @@ while ($row = $stmt->fetch(PDO::FETCH_ASSOC)) {
         $products[$pid]['images'][] = $row['image_path'];
     }
 }
+
+
 ?>
 <!DOCTYPE html>
 <html lang="pl">
@@ -101,6 +116,15 @@ while ($row = $stmt->fetch(PDO::FETCH_ASSOC)) {
                         <?= htmlspecialchars($cat['name']); ?>
                     </button>
                 <?php endforeach; ?>
+            </form>
+            <form method="get" action="products.php" class="search-form">
+                <?php if($filterCat): ?>
+                    <input type="hidden" name="category" value="<?= $filterCat ?>">
+                <?php endif; ?>
+                <input type="text" name="search"
+                       placeholder="Szukaj produktów…"
+                       value="<?= htmlspecialchars($searchTerm) ?>">
+                <button type="submit">Szukaj</button>
             </form>
         </div>
 

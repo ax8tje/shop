@@ -12,6 +12,7 @@ html, body {
 .logo-link {
     text-decoration: none;
     color: inherit;
+    text-shadow: 0 0 2px #E7EFC7;
 }
 
 .main-content {
@@ -832,4 +833,30 @@ html, body {
 
 .category-filter-form button:hover{
     background-color: #292911;
+}
+
+.search-form {
+    text-align: center;
+    margin: 1rem auto;
+    font-family: 'Roboto', sans-serif;
+}
+.search-form input[type="text"] {
+    width: 200px;
+    max-width: 80%;
+    padding: 0.5rem;
+    border: 2px solid #3B3B1A;
+    border-radius: 4px;
+    margin-right: 0.5rem;
+}
+.search-form button {
+    padding: 0.5rem 1rem;
+    background: #3B3B1A;
+    color: #E7EFC7;
+    border: none;
+    border-radius: 4px;
+    cursor: pointer;
+    transition: background 0.2s;
+}
+.search-form button:hover {
+    background: #292911;
 }
