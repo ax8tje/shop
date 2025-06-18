@@ -6,7 +6,12 @@ $stmtCats = $pdo->query("SELECT id, name FROM categories ORDER BY name");
 $categories = $stmtCats->fetchAll(PDO::FETCH_ASSOC);
 
 // Odczyt parametru filtra
-$filterCat = isset($_GET['category']) ? (int)$_GET['category'] : null;
+if (isset($_GET['category']) && $_GET['category'] !== '') {
+    $filterCat = (int)$_GET['category'];
+} else {
+    $filterCat = null;
+}
+
 
 // Budowa zapytania z przygotowaniem
 $sql = "
