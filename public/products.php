@@ -1,5 +1,8 @@
 <?php
+session_start();
 require_once '../includes/db.php';
+// Ostatnio oglądane
+$recentIds = $_SESSION['recently_viewed'] ?? [];
 
 // Pobranie kategorii do filtra
 $stmtCats   = $pdo->query("SELECT id, name FROM categories ORDER BY name");
@@ -37,8 +40,9 @@ if ($filterCat) {
 
 // Dodaj warunek wyszukiwania
 if ($searchTerm !== '') {
-    $conditions[]      = "(p.title LIKE :term OR p.description LIKE :term)";
-    $params['term']    = "%{$searchTerm}%";
+    $conditions[]   = "(p.title LIKE :termTitle OR p.description LIKE :termDesc)";
+    $params['termTitle'] = "%{$searchTerm}%";
+    $params['termDesc']  = "%{$searchTerm}%";
 }
 
 // Jeśli mamy jakiekolwiek warunki, doklej je do zapytania
@@ -67,6 +71,35 @@ while ($row = $stmt->fetch(PDO::FETCH_ASSOC)) {
     }
     if (!empty($row['image_path'])) {
         $products[$pid]['images'][] = $row['image_path'];
+    }
+}
+
+// Ostatnio ogladane produkty w sesji
+$recentProducts = [];
+if (!empty($_SESSION['recently_viewed'])) {
+    $recentIds = array_map('intval', $_SESSION['recently_viewed']);
+    $placeholders = implode(',', array_fill(0, count($recentIds), '?'));
+    $order = implode(',', $recentIds);
+    $sqlRecent = "SELECT p.id, p.title, p.price, p.description, pi.image_path
+                  FROM products p
+                  LEFT JOIN product_images pi ON p.id = pi.product_id
+                  WHERE p.id IN ($placeholders)
+                  ORDER BY FIELD(p.id, $order), pi.id";
+    $stmtRecent = $pdo->prepare($sqlRecent);
+    $stmtRecent->execute($recentIds);
+    while ($row = $stmtRecent->fetch(PDO::FETCH_ASSOC)) {
+        $rid = $row['id'];
+        if (!isset($recentProducts[$rid])) {
+            $recentProducts[$rid] = [
+                'title'       => $row['title'],
+                'price'       => $row['price'],
+                'description' => $row['description'],
+                'images'      => [],
+            ];
+        }
+        if (!empty($row['image_path'])) {
+            $recentProducts[$rid]['images'][] = $row['image_path'];
+        }
     }
 }
 ?>
@@ -167,6 +200,26 @@ while ($row = $stmt->fetch(PDO::FETCH_ASSOC)) {
             <?php endif; ?>
         </div>
     </main>
+        <div class="recently-viewed">
+            <?php if (!empty($recentProducts)): ?>
+                <h2 class="title">Ostatnio oglądane</h2>
+                <div class="products-container">
+                    <?php foreach ($recentProducts as $rid => $rprod): ?>
+                        <div class="product" data-product-id="<?= $rid; ?>">
+                            <h2><?= htmlspecialchars($rprod['title']); ?></h2>
+                            <?php if (!empty($rprod['images'])): ?>
+                                <a href="product.php?id=<?= $rid; ?>">
+                                    <img src="assets/img/<?= htmlspecialchars($rprod['images'][0]); ?>"
+                                         class="slide-image1"
+                                         alt="<?= htmlspecialchars($rprod['title']); ?>">
+                                </a>
+                            <?php endif; ?>
+                            <p><strong>Cena:</strong> <?= number_format($rprod['price'], 2); ?> zł</p>
+                        </div>
+                    <?php endforeach; ?>
+                </div>
+            <?php endif; ?>
+        </div>
 </div>
 <footer class="footer">
     <div class="footer-container">

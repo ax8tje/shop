@@ -29,6 +29,14 @@ $stmt_imgs = $pdo->prepare("SELECT image_path FROM product_images WHERE product_
 $stmt_imgs->execute([$pid]);
 $images = $stmt_imgs->fetchAll(PDO::FETCH_COLUMN);
 $product['images'] = $images;
+
+if (!isset($_SESSION['recently_viewed'])) {
+    $_SESSION['recently_viewed'] = [];
+}
+$recent = &$_SESSION['recently_viewed'];
+$recent = array_values(array_diff($recent, [$pid]));
+array_unshift($recent, $pid);
+$_SESSION['recently_viewed'] = array_slice($recent, 0, 5);
 ?>
 <!DOCTYPE html>
 <html lang="pl">
