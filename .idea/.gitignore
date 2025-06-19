@@ -1,8 +1,23 @@
-# Default ignored files
-/shelf/
-/workspace.xml
-# Editor-based HTTP Client requests
-/httpRequests/
-# Datasource local storage ignored files
-/dataSources/
-/dataSources.local.xml
+# Ignore IDE directories
+.idea/
+.vscode/
+
+# Dependency directories
+node_modules/
+vendor/
+
+# Logs and temporary files
+*.log
+*.tmp
+*.swp
+
+# OS generated files
+.DS_Store
+Thumbs.db
+
+# Temporary directories
+cache/
+tmp/
+
+# JetBrains HTTP Requests
+httpRequests/
