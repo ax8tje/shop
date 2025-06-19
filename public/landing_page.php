@@ -1,3 +1,43 @@
+<?php
+session_start();
+require_once '../includes/db.php';
+
+$recentIds = [];
+if (!empty($_COOKIE['recently_viewed'])) {
+    $recentIds = json_decode($_COOKIE['recently_viewed'], true);
+    if (!is_array($recentIds)) {
+        $recentIds = [];
+    }
+}
+
+$recentProducts = [];
+if (!empty($recentIds)) {
+    $placeholders = implode(',', array_fill(0, count($recentIds), '?'));
+    $order = implode(',', $recentIds);
+    $sqlRecent = "SELECT p.id, p.title, p.price, p.description, pi.image_path
+                  FROM products p
+                  LEFT JOIN product_images pi ON p.id = pi.product_id
+                  WHERE p.id IN ($placeholders)
+                  ORDER BY FIELD(p.id, $order), pi.id";
+    $stmtRecent = $pdo->prepare($sqlRecent);
+    $stmtRecent->execute($recentIds);
+    while ($row = $stmtRecent->fetch(PDO::FETCH_ASSOC)) {
+        $rid = $row['id'];
+        if (!isset($recentProducts[$rid])) {
+            $recentProducts[$rid] = [
+                'title'       => $row['title'],
+                'price'       => $row['price'],
+                'description' => $row['description'],
+                'images'      => [],
+            ];
+        }
+        if (!empty($row['image_path'])) {
+            $recentProducts[$rid]['images'][] = $row['image_path'];
+        }
+    }
+}
+?>
+
 <!DOCTYPE html>
 <html lang="pl">
 <head>

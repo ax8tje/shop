@@ -37,6 +37,16 @@ $recent = &$_SESSION['recently_viewed'];
 $recent = array_values(array_diff($recent, [$pid]));
 array_unshift($recent, $pid);
 $_SESSION['recently_viewed'] = array_slice($recent, 0, 5);
+
+$cookieName = 'recently_viewed';
+$cookieData = isset($_COOKIE[$cookieName]) ? json_decode($_COOKIE[$cookieName], true) : [];
+if (!is_array($cookieData)) {
+    $cookieData = [];
+}
+$cookieData = array_values(array_diff($cookieData, [$pid]));
+array_unshift($cookieData, $pid);
+$cookieData = array_slice($cookieData, 0, 5);
+setcookie($cookieName, json_encode($cookieData), time() + 60*60*24*30, '/');
 ?>
 <!DOCTYPE html>
 <html lang="pl">
