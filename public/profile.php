@@ -1,5 +1,4 @@
 <?php
-session_start();
 require_once '../includes/db.php';
 require_once '../includes/auth.php';
 
@@ -10,6 +9,7 @@ $address = [
     'postal_code' => '',
     'country'     => ''
 ];
+$addressUpdated = false;
 
 if (!isset($_SESSION['user'])) {
     header('Location: login.php');
@@ -18,14 +18,10 @@ if (!isset($_SESSION['user'])) {
 
 $uid = $_SESSION['user']['id'] ?? null;
 $orders = [];
-$lastAddress = null;
 if ($uid) {
     $stmt = $pdo->prepare('SELECT * FROM orders WHERE user_id = ? ORDER BY id DESC');
     $stmt->execute([$uid]);
     $orders = $stmt->fetchAll();
-    if ($orders) {
-        $lastAddress = $orders[0];
-    }
     $addr = getUserAddress($uid);
     if ($addr) {
         $address = array_merge($address, $addr);
@@ -39,6 +35,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['update_address'])) {
     $address['postal_code'] = trim($_POST['postal_code'] ?? '');
     $address['country']     = trim($_POST['country'] ?? '');
     updateUserAddress($uid, $address);
+    $addressUpdated = true;
 }
 ?>
 <!DOCTYPE html>
@@ -97,21 +94,24 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['update_address'])) {
     </div>
 
     <div id="address" class="profile-view">
+        <?php if ($addressUpdated): ?>
+            <p style="color:green;">Adres zaktualizowany</p>
+        <?php endif; ?>
         <form method="post" class="address-form">
             <label>Imię i nazwisko:
-                <input type="text" name="full_name" value="<?=htmlspecialchars($address['full_name'])?>">
+                <input type="text" name="full_name" required value="<?=htmlspecialchars($address['full_name'])?>">
             </label>
             <label>Ulica, nr domu:
-                <input type="text" name="address" value="<?=htmlspecialchars($address['address'])?>">
+                <input type="text" name="full_name" required value="<?=htmlspecialchars($address['full_name'])?>">
             </label>
             <label>Miasto:
-                <input type="text" name="city" value="<?=htmlspecialchars($address['city'])?>">
+                <input type="text" name="full_name" required value="<?=htmlspecialchars($address['full_name'])?>">
             </label>
             <label>Kod pocztowy:
-                <input type="text" name="postal_code" value="<?=htmlspecialchars($address['postal_code'])?>">
+                <input type="text" name="postal_code" pattern="[0-9]{2}-[0-9]{3}" required value="<?=htmlspecialchars($address['postal_code'])?>">
             </label>
             <label>Kraj:
-                <input type="text" name="country" value="<?=htmlspecialchars($address['country'])?>">
+                <input type="text" name="country" required value="<?=htmlspecialchars($address['country'])?>">
             </label>
             <button type="submit" name="update_address" class="hero-button">Zapisz adres</button>
         </form>
