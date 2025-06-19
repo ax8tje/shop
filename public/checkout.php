@@ -2,9 +2,29 @@
 session_start();
 require_once '../includes/db.php';
 require_once '../includes/cart.php';
+require_once '../includes/auth.php';
 
 $items = getCartItems($pdo);
 $total = calculateCartTotal($items);
+
+$fn = '';
+$email = '';
+$addr = '';
+$city = '';
+$zip = '';
+$country = '';
+
+if (isset($_SESSION['user']['id'])) {
+    $uaddr = getUserAddress($_SESSION['user']['id']);
+    if ($uaddr) {
+        $fn = $uaddr['full_name'] ?? '';
+        $email = $uaddr['email'] ?? ($_SESSION['user_email'] ?? '');
+        $addr = $uaddr['address'] ?? '';
+        $city = $uaddr['city'] ?? '';
+        $zip = $uaddr['postal_code'] ?? '';
+        $country = $uaddr['country'] ?? '';
+    }
+}
 
 $errors = [];
 // Obsługa formularza:
@@ -44,6 +64,16 @@ if ($_SERVER['REQUEST_METHOD']==='POST') {
             'total'   => $total
         ]);
         $orderId = $pdo->lastInsertId();
+
+        if (isset($_SESSION['user']['id'])) {
+            updateUserAddress($_SESSION['user']['id'], [
+                'full_name'   => $fn,
+                'address'     => $addr,
+                'city'        => $city,
+                'postal_code' => $zip,
+                'country'     => $country
+            ]);
+        }
 
         // 3) Zapis pozycji
         $stmtItem = $pdo->prepare("
@@ -162,6 +192,7 @@ if ($_SERVER['REQUEST_METHOD']==='POST') {
                     <input id="country" type="text" name="country" required aria-describedby="err-country" value="<?=htmlspecialchars($country ?? '')?>">
                     <span class="error-text" id="err-country" role="alert"><?= htmlspecialchars($errors['country'] ?? '') ?></span>
                 </label>
+                <button type="submit" class="hero-button">Złóż zamówienie</button>
             </form>
         <?php endif; ?>
 

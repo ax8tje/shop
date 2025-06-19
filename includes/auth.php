@@ -49,3 +49,28 @@ function logoutUser() {
     session_unset();
     session_destroy();
 }
+
+function getUserAddress(int $userId): ?array {
+    global $pdo;
+    $stmt = $pdo->prepare(
+        'SELECT full_name, address, city, postal_code, country, email FROM users WHERE id = ?'
+    );
+    $stmt->execute([$userId]);
+    $addr = $stmt->fetch(PDO::FETCH_ASSOC);
+    return $addr ?: null;
+}
+
+function updateUserAddress(int $userId, array $data): void {
+    global $pdo;
+    $stmt = $pdo->prepare(
+        'UPDATE users SET full_name = :fn, address = :addr, city = :city, postal_code = :zip, country = :country WHERE id = :id'
+    );
+    $stmt->execute([
+        'fn' => $data['full_name'],
+        'addr' => $data['address'],
+        'city' => $data['city'],
+        'zip' => $data['postal_code'],
+        'country' => $data['country'],
+        'id' => $userId
+    ]);
+}

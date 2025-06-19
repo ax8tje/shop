@@ -519,7 +519,7 @@ html, body {
     align-items: center;
     gap: 15px;
     max-width: 40vw;
-    overflow: hidden;
+    overflow: visible;
 }
 
 .navbar-icon {

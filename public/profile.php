@@ -1,6 +1,15 @@
 <?php
 session_start();
 require_once '../includes/db.php';
+require_once '../includes/auth.php';
+
+$address = [
+    'full_name'   => '',
+    'address'     => '',
+    'city'        => '',
+    'postal_code' => '',
+    'country'     => ''
+];
 
 if (!isset($_SESSION['user'])) {
     header('Location: login.php');
@@ -17,6 +26,19 @@ if ($uid) {
     if ($orders) {
         $lastAddress = $orders[0];
     }
+    $addr = getUserAddress($uid);
+    if ($addr) {
+        $address = array_merge($address, $addr);
+    }
+}
+
+if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['update_address'])) {
+    $address['full_name']   = trim($_POST['full_name'] ?? '');
+    $address['address']     = trim($_POST['address'] ?? '');
+    $address['city']        = trim($_POST['city'] ?? '');
+    $address['postal_code'] = trim($_POST['postal_code'] ?? '');
+    $address['country']     = trim($_POST['country'] ?? '');
+    updateUserAddress($uid, $address);
 }
 ?>
 <!DOCTYPE html>
@@ -75,14 +97,24 @@ if ($uid) {
     </div>
 
     <div id="address" class="profile-view">
-        <?php if ($lastAddress): ?>
-            <p><?=htmlspecialchars($lastAddress['full_name'])?></p>
-            <p><?=htmlspecialchars($lastAddress['address'])?></p>
-            <p><?=htmlspecialchars($lastAddress['postal_code'])?> <?=htmlspecialchars($lastAddress['city'])?></p>
-            <p><?=htmlspecialchars($lastAddress['country'])?></p>
-        <?php else: ?>
-            <p>Brak zapisanych adresów.</p>
-        <?php endif; ?>
+        <form method="post" class="address-form">
+            <label>Imię i nazwisko:
+                <input type="text" name="full_name" value="<?=htmlspecialchars($address['full_name'])?>">
+            </label>
+            <label>Ulica, nr domu:
+                <input type="text" name="address" value="<?=htmlspecialchars($address['address'])?>">
+            </label>
+            <label>Miasto:
+                <input type="text" name="city" value="<?=htmlspecialchars($address['city'])?>">
+            </label>
+            <label>Kod pocztowy:
+                <input type="text" name="postal_code" value="<?=htmlspecialchars($address['postal_code'])?>">
+            </label>
+            <label>Kraj:
+                <input type="text" name="country" value="<?=htmlspecialchars($address['country'])?>">
+            </label>
+            <button type="submit" name="update_address" class="hero-button">Zapisz adres</button>
+        </form>
     </div>
 
     <div id="history" class="profile-view">
