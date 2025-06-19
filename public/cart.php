@@ -2,6 +2,7 @@
 session_start();
 require_once '../includes/db.php';
 require_once '../includes/cart.php';
+require_once '../includes/sidebar.php';
 
 if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['remove_id'])) {
     removeCartItem((int)$_POST['remove_id']);

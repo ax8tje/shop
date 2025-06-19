@@ -1,6 +1,7 @@
 <?php
 session_start();
 require_once '../includes/db.php';
+require_once '../includes/sidebar.php';
 
 $orderId = isset($_GET['order']) ? (int)$_GET['order'] : 0;
 

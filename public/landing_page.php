@@ -1,6 +1,7 @@
 <?php
 session_start();
 require_once '../includes/db.php';
+require_once '../includes/sidebar.php';
 
 $recentIds = [];
 if (!empty($_COOKIE['recently_viewed'])) {

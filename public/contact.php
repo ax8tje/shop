@@ -1,3 +1,7 @@
+<?php
+require_once '../includes/db.php';
+require_once '../includes/sidebar.php';
+?>
 <!DOCTYPE html>
 <html lang="pl">
 <head>

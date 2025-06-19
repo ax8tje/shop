@@ -1,5 +1,6 @@
 <?php
 require_once '../includes/auth.php';
+require_once '../includes/sidebar.php';
 
 $message = '';
 if (isset($_GET['registered'])) {

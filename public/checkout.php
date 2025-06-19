@@ -2,6 +2,7 @@
 require_once '../includes/db.php';
 require_once '../includes/cart.php';
 require_once '../includes/auth.php';
+require_once '../includes/sidebar.php';
 
 $items = getCartItems($pdo);
 $total = calculateCartTotal($items);
