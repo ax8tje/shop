@@ -17,12 +17,13 @@ if ($_SERVER['REQUEST_METHOD']==='POST') {
     $zip   = trim($_POST['postal_code']  ?? '');
     $country = trim($_POST['country']    ?? '');
 
-    if ($fn==='')    $errors[] = 'Podaj imię i nazwisko.';
-    if (!filter_var($email, FILTER_VALIDATE_EMAIL)) $errors[] = 'Nieprawidłowy e-mail.';
-    if ($addr==='')  $errors[] = 'Podaj adres.';
-    if ($city==='')  $errors[] = 'Podaj miasto.';
-    if ($zip==='')   $errors[] = 'Podaj kod pocztowy.';
-    if ($country==='') $errors[] = 'Podaj kraj.';
+    if ($fn==='')    $errors['full_name']   = 'Podaj imię i nazwisko.';
+    if (!filter_var($email, FILTER_VALIDATE_EMAIL))
+        $errors['email']        = 'Nieprawidłowy e-mail.';
+    if ($addr==='')  $errors['address']     = 'Podaj adres.';
+    if ($city==='')  $errors['city']        = 'Podaj miasto.';
+    if ($zip==='')   $errors['postal_code'] = 'Podaj kod pocztowy.';
+    if ($country==='') $errors['country']   = 'Podaj kraj.';
 
     if (empty($errors)) {
         // 2) Zapis do orders
@@ -127,13 +128,30 @@ if ($_SERVER['REQUEST_METHOD']==='POST') {
             <?php endif; ?>
 
             <form method="post" class="checkout-form">
-                <label>Imię i nazwisko:<input type="text" name="full_name" value="<?=htmlspecialchars($fn ?? '')?>"></label>
-                <label>E-mail:<input type="email" name="email" value="<?=htmlspecialchars($email ?? '')?>"></label>
-                <label>Ulica, nr domu:<input type="text" name="address" value="<?=htmlspecialchars($addr ?? '')?>"></label>
-                <label>Miasto:<input type="text" name="city" value="<?=htmlspecialchars($city ?? '')?>"></label>
-                <label>Kod pocztowy:<input type="text" name="postal_code" value="<?=htmlspecialchars($zip ?? '')?>"></label>
-                <label>Kraj:<input type="text" name="country" value="<?=htmlspecialchars($country ?? '')?>"></label>
-                <button type="submit">Potwierdź i zapłać</button>
+                <label>Imię i nazwisko:
+                    <input id="full_name" type="text" name="full_name" required aria-describedby="err-full_name" value="<?=htmlspecialchars($fn ?? '')?>">
+                    <span class="error-text" id="err-full_name" role="alert"><?= htmlspecialchars($errors['full_name'] ?? '') ?></span>
+                </label>
+                <label>E-mail:
+                    <input id="email" type="email" name="email" required aria-describedby="err-email" value="<?=htmlspecialchars($email ?? '')?>">
+                    <span class="error-text" id="err-email" role="alert"><?= htmlspecialchars($errors['email'] ?? '') ?></span>
+                </label>
+                <label>Ulica, nr domu:
+                    <input id="address" type="text" name="address" required aria-describedby="err-address" value="<?=htmlspecialchars($addr ?? '')?>">
+                    <span class="error-text" id="err-address" role="alert"><?= htmlspecialchars($errors['address'] ?? '') ?></span>
+                </label>
+                <label>Miasto:
+                    <input id="city" type="text" name="city" required aria-describedby="err-city" value="<?=htmlspecialchars($city ?? '')?>">
+                    <span class="error-text" id="err-city" role="alert"><?= htmlspecialchars($errors['city'] ?? '') ?></span>
+                </label>
+                <label>Kod pocztowy:
+                    <input id="postal_code" type="text" name="postal_code" pattern="[0-9]{2}-[0-9]{3}" required aria-describedby="err-postal_code" value="<?=htmlspecialchars($zip ?? '')?>">
+                    <span class="error-text" id="err-postal_code" role="alert"><?= htmlspecialchars($errors['postal_code'] ?? '') ?></span>
+                </label>
+                <label>Kraj:
+                    <input id="country" type="text" name="country" required aria-describedby="err-country" value="<?=htmlspecialchars($country ?? '')?>">
+                    <span class="error-text" id="err-country" role="alert"><?= htmlspecialchars($errors['country'] ?? '') ?></span>
+                </label>
             </form>
         <?php endif; ?>
 

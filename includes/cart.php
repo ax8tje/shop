@@ -52,3 +52,7 @@ function calculateCartTotal(array $items): float {
     }
     return $sum;
 }
+
+function clearCart(): void {
+    unset($_SESSION['cart']);
+}

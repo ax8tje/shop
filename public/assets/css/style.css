@@ -979,3 +979,68 @@ html, body {
 .form-errors li {
     margin: 0.2rem 0;
 }
+
+.checkout-form button:hover {
+    background-color: #292911;
+}
+
+.form-errors {
+    list-style: none;
+    padding: 0;
+    margin: 0 0 1rem;
+    color: #B00020;
+}
+
+.form-errors li {
+    margin: 0.2rem 0;
+}
+
+.profile-container {
+    max-width: 600px;
+    margin: 5rem auto;
+    padding: 1rem 1.5rem;
+    background: #AEC8A4;
+    border-radius: 8px;
+    box-shadow: 0 6px 6px rgba(58,48,18,0.4);
+    box-sizing: border-box;
+}
+
+.profile-nav {
+    display: flex;
+    justify-content: space-around;
+    margin-bottom: 1rem;
+}
+
+.profile-nav button {
+    background: #3B3B1A;
+    color: #E7EFC7;
+    border: none;
+    padding: 0.5rem 1rem;
+    border-radius: 5px;
+    cursor: pointer;
+    transition: background-color 0.3s;
+}
+
+.profile-nav button.active,
+.profile-nav button:hover {
+    background: #292911;
+}
+
+.profile-view {
+    display: none;
+}
+
+.profile-view.active {
+    display: block;
+}
+
+.order-history {
+    list-style: none;
+    padding: 0;
+    margin: 0;
+}
+
+.order-history li {
+    padding: 0.3rem 0;
+    border-bottom: 1px solid rgba(58,48,18,0.4);
+}

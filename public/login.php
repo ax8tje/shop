@@ -15,7 +15,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     } else {
         $result = loginUser($email, $password);
         if ($result === true) {
-            header('Location: index.php'); // Przekieruj do strony głównej lub dashboardu
+            header('Location: landing_page.php');
             exit;
         } else {
             $message = $result;

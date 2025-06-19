@@ -21,15 +21,16 @@ function registerUser($email, $password) {
 
 function loginUser($email, $password) {
     global $pdo;
-    $stmt = $pdo->prepare("SELECT id FROM users WHERE email = ?");
+    $stmt = $pdo->prepare("SELECT id, password, role FROM users WHERE email = ?");
     $stmt->execute([$email]);
     $user = $stmt->fetch();
 
-    if(!user || password_verify($password, $user['password'])) {
+    if (!$user || !password_verify($password, $user['password'])) {
         return "Nieprawidłowy e-mail lub hasło.";
     }
 
     $_SESSION['user'] = $user;
+    $_SESSION['user_id']    = $user['id'];
     $_SESSION['user_email'] = $email;
     $_SESSION['user_role'] = $user['role'];
 
