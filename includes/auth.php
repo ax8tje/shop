@@ -44,6 +44,18 @@ function isAdmin() {
     return isset($_SESSION['user_role']) && $_SESSION['user_role'] === 'admin';
 }
 
+function requireAdmin(): void {
+    if (!isAdmin()) {
+        if (!isLoggedIn()) {
+            header('Location: /public/login.php');
+            exit;
+        }
+        http_response_code(403);
+        echo 'Brak uprawnień do tej strony.';
+        exit;
+    }
+}
+
 function logoutUser() {
     session_unset();
     session_destroy();
