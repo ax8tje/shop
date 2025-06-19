@@ -85,3 +85,48 @@ function updateUserAddress(int $userId, array $data): void {
         'id' => $userId
     ]);
 }
+
+function createPasswordResetToken(string $email): bool {
+    global $pdo;
+    $stmt = $pdo->prepare('SELECT id FROM users WHERE email = ?');
+    $stmt->execute([$email]);
+    $userId = $stmt->fetchColumn();
+    if (!$userId) {
+        return false;
+    }
+
+    $token      = bin2hex(random_bytes(16));
+    $tokenHash  = hash('sha256', $token);
+    $expires    = date('Y-m-d H:i:s', time() + 3600);
+
+    $pdo->prepare('DELETE FROM password_resets WHERE user_id = ?')->execute([$userId]);
+    $ins = $pdo->prepare('INSERT INTO password_resets (user_id, token, expires_at) VALUES (?, ?, ?)');
+    $ins->execute([$userId, $tokenHash, $expires]);
+
+    $link = sprintf('http://%s/reset_password.php?token=%s', $_SERVER['HTTP_HOST'] ?? 'localhost', $token);
+    @mail($email, 'Resetowanie hasła', "Kliknij w link aby zresetować hasło: $link");
+    return true;
+}
+
+function validatePasswordResetToken(string $token): ?int {
+    global $pdo;
+    $hash = hash('sha256', $token);
+    $stmt = $pdo->prepare('SELECT user_id FROM password_resets WHERE token = ? AND expires_at > NOW()');
+    $stmt->execute([$hash]);
+    $uid = $stmt->fetchColumn();
+    return $uid ?: null;
+}
+
+function resetPassword(int $userId, string $newPassword): void {
+    global $pdo;
+    $hash = password_hash($newPassword, PASSWORD_DEFAULT);
+    $pdo->prepare('UPDATE users SET password = ? WHERE id = ?')->execute([$hash, $userId]);
+    $pdo->prepare('DELETE FROM password_resets WHERE user_id = ?')->execute([$userId]);
+}
+
+function requireLogin(): void {
+    if (!isLoggedIn()) {
+        header('Location: /public/login.php');
+        exit;
+    }
+}

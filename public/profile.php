@@ -3,6 +3,8 @@ require_once '../includes/db.php';
 require_once '../includes/auth.php';
 require_once '../includes/sidebar.php';
 
+requireLogin();
+
 $address = [
     'full_name'   => '',
     'address'     => '',
@@ -11,11 +13,6 @@ $address = [
     'country'     => ''
 ];
 $addressUpdated = false;
-
-if (!isLoggedIn()) {
-    header('Location: login.php');
-    exit;
-}
 
 $uid = $_SESSION['user_id'] ?? null;
 $orders = [];
