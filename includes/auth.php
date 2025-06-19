@@ -29,9 +29,8 @@ function loginUser($email, $password) {
         return "Nieprawidłowy e-mail lub hasło.";
     }
 
-    $_SESSION['user'] = $user;
-    $_SESSION['user_id']    = $user['id'];
-    $_SESSION['user_email'] = $email;
+    session_regenerate_id(true);
+    $_SESSION['user_id']   = $user['id'];
     $_SESSION['user_role'] = $user['role'];
 
     return true;

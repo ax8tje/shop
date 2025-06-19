@@ -11,12 +11,12 @@ $address = [
 ];
 $addressUpdated = false;
 
-if (!isset($_SESSION['user'])) {
+if (!isLoggedIn()) {
     header('Location: login.php');
     exit;
 }
 
-$uid = $_SESSION['user']['id'] ?? null;
+$uid = $_SESSION['user_id'] ?? null;
 $orders = [];
 if ($uid) {
     $stmt = $pdo->prepare('SELECT * FROM orders WHERE user_id = ? ORDER BY id DESC');
@@ -25,6 +25,12 @@ if ($uid) {
     $addr = getUserAddress($uid);
     if ($addr) {
         $address = array_merge($address, $addr);
+        $userEmail = $addr['email'] ?? '';
+    }
+    if ($userEmail === '') {
+        $stmtE = $pdo->prepare('SELECT email FROM users WHERE id = ?');
+        $stmtE->execute([$uid]);
+        $userEmail = $stmtE->fetchColumn() ?: '';
     }
 }
 
@@ -89,7 +95,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['update_address'])) {
     </div>
 
     <div id="info" class="profile-view active">
-        <p><strong>Email:</strong> <?=htmlspecialchars($_SESSION['user_email'] ?? '')?></p>
+        <p><strong>Email:</strong> <?=htmlspecialchars($userEmail)?></p>
         <!-- Tutaj można dodać więcej danych użytkownika -->
     </div>
 

@@ -13,11 +13,11 @@ $city = '';
 $zip = '';
 $country = '';
 
-if (isset($_SESSION['user']['id'])) {
-    $uaddr = getUserAddress($_SESSION['user']['id']);
+if (isset($_SESSION['user_id'])) {
+    $uaddr = getUserAddress($_SESSION['user_id']);
     if ($uaddr) {
         $fn = $uaddr['full_name'] ?? '';
-        $email = $uaddr['email'] ?? ($_SESSION['user_email'] ?? '');
+        $email = $uaddr['email'] ?? '';
         $addr = $uaddr['address'] ?? '';
         $city = $uaddr['city'] ?? '';
         $zip = $uaddr['postal_code'] ?? '';
@@ -53,7 +53,7 @@ if ($_SERVER['REQUEST_METHOD']==='POST') {
             (:uid, :fn, :email, :addr, :city, :zip, :country, :total)
         ");
         $stmt->execute([
-            'uid'     => $_SESSION['user']['id'] ?? null,
+            'uid'     => $_SESSION['user_id'] ?? null,
             'fn'      => $fn,
             'email'   => $email,
             'addr'    => $addr,
@@ -64,8 +64,8 @@ if ($_SERVER['REQUEST_METHOD']==='POST') {
         ]);
         $orderId = $pdo->lastInsertId();
 
-        if (isset($_SESSION['user']['id'])) {
-            updateUserAddress($_SESSION['user']['id'], [
+        if (isset($_SESSION['user_id'])) {
+            updateUserAddress($_SESSION['user_id'], [
                 'full_name'   => $fn,
                 'address'     => $addr,
                 'city'        => $city,
