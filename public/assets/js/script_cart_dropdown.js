@@ -1,17 +1,12 @@
 document.addEventListener('DOMContentLoaded', () => {
-    const toggle   = document.getElementById('cartToggle');
+    const wrapper  = document.querySelector('.cart-wrapper');
     const dropdown = document.getElementById('cartDropdown');
-    if (!toggle || !dropdown) return;
+    if (!wrapper || !dropdown) return;
 
-    toggle.addEventListener('click', e => {
-        e.preventDefault();
-        e.stopPropagation();
-        dropdown.classList.toggle('show');
+    wrapper.addEventListener('mouseenter', () => {
+        dropdown.classList.add('show');
     });
-
-    dropdown.addEventListener('click', e => e.stopPropagation());
-
-    document.addEventListener('click', () => {
+    wrapper.addEventListener('mouseleave', () => {
         dropdown.classList.remove('show');
     });
 });

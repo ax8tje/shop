@@ -1077,6 +1077,10 @@ html, body {
     display: flex;
 }
 
+.profile-wrapper:hover .profile-dropdown {
+    display: flex;
+}
+
 .cart-wrapper {
     position: relative;
 }
@@ -1113,4 +1117,21 @@ html, body {
 
 .side-cart a:hover {
     color: #8A784E;
+}
+
+.cart-wrapper:hover .cart-dropdown {
+    display: block;
+}
+
+.cart-dropdown a {
+    display: block;
+    margin-top: 6px;
+    color: #E7EFC7;
+    text-decoration: none;
+    white-space: nowrap;
+
+}
+
+.cart-dropdown a:hover {
+    background-color: #45451f;
 }

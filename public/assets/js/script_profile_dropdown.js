@@ -1,19 +1,14 @@
 document.addEventListener('DOMContentLoaded', () => {
-    const toggle   = document.getElementById('profileToggle');
+    const wrapper  = document.querySelector('.profile-wrapper');
     const dropdown = document.getElementById('profileDropdown');
-    if (!toggle || !dropdown) return;
+    if (!wrapper || !dropdown) return;
 
-    toggle.addEventListener('click', e => {
-        e.preventDefault();
-        e.stopPropagation();
-        dropdown.classList.toggle('show');
+    wrapper.addEventListener('mouseenter', () => {
+        dropdown.classList.add('show');
     });
 
-    // Kliknięcie wewnątrz menu nie powinno go zamykać:
-    dropdown.addEventListener('click', e => e.stopPropagation());
-
-    // Klik gdziekolwiek poza menu zamyka dropdown:
-    document.addEventListener('click', () => {
+    wrapper.addEventListener('mouseleave', () => {
         dropdown.classList.remove('show');
     });
 });
+
