@@ -73,3 +73,13 @@ CREATE TABLE order_items (
     FOREIGN KEY (product_id) REFERENCES products(id)
     ON DELETE CASCADE
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
+
+CREATE TABLE password_resets (
+  id         INT AUTO_INCREMENT PRIMARY KEY,
+  user_id    INT              NOT NULL,
+  token      CHAR(64)         NOT NULL,
+  expires_at DATETIME         NOT NULL,
+  CONSTRAINT fk_resets_user
+    FOREIGN KEY (user_id) REFERENCES users(id)
+    ON DELETE CASCADE
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
