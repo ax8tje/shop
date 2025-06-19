@@ -40,3 +40,13 @@ Users who forget their password can request a reset link from `forgot_password.p
 The script stores a hashed token in the `password_resets` table and sends an e-mail
 with a link to `reset_password.php`. Tokens expire after one hour. Once the
 password is changed the token is removed from the database.
+
+
+## REST API
+
+The application exposes a simple read-only API for products.
+
+- `GET /api/products.php` returns a list of all products with their `id`, `title` and `price` fields.
+- `GET /api/products.php?id=123` returns detailed information about product `123` including the list of image paths.
+
+Responses are provided in JSON format and use standard HTTP status codes.
