@@ -1,6 +1,7 @@
 <?php
 require_once __DIR__ . '/db.php';
 require_once __DIR__ . '/cart.php';
+require_once __DIR__ . '/auth.php';
 
 $items = getCartItems($pdo);
 $count = count($items);
@@ -21,6 +22,9 @@ $total = calculateCartTotal($items);
             <div id="profileDropdown" class="profile-dropdown">
                 <a href="profile.php">Profil</a>
                 <a href="logout.php">Wyloguj</a>
+                <?php if (isAdmin()): ?>
+                    <a href="/admin/dashboard.php">Panel admina</a>
+                <?php endif; ?>
             </div>
         </div>
         <div class="cart-wrapper">
