@@ -102,10 +102,10 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['update_address'])) {
                 <input type="text" name="full_name" required value="<?=htmlspecialchars($address['full_name'])?>">
             </label>
             <label>Ulica, nr domu:
-                <input type="text" name="full_name" required value="<?=htmlspecialchars($address['full_name'])?>">
+                <input type="text" name="address" required value="<?=htmlspecialchars($address['address'])?>">
             </label>
             <label>Miasto:
-                <input type="text" name="full_name" required value="<?=htmlspecialchars($address['full_name'])?>">
+                <input type="text" name="city" required value="<?=htmlspecialchars($address['city'])?>">
             </label>
             <label>Kod pocztowy:
                 <input type="text" name="postal_code" pattern="[0-9]{2}-[0-9]{3}" required value="<?=htmlspecialchars($address['postal_code'])?>">
