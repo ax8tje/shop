@@ -54,32 +54,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['update_address'])) {
     <link href="https://fonts.googleapis.com/css2?family=Roboto:ital,wght@0,100..900;1,100..900&display=swap" rel="stylesheet">
 </head>
 <body>
-<div class="navbar">
-    <div class="navbar-start">
-        <div class="burger-menu" id="burgerToggle">
-            <img src="assets/img/burger-menu-white.png" id="burgerIcon">
-        </div>
-        <h1>
-            <a href="landing_page.php" class="logo-link">moko.store</a>
-        </h1>
-    </div>
-
-    <div class="navbar-end">
-        <div class="profile-wrapper">
-            <a href="#" id="profileToggle" class="navbar-icon">
-                <img src="assets/img/profile-icon.png" alt="Profile">
-            </a>
-            <div id="profileDropdown" class="profile-dropdown">
-                <a href="profile.php">Profil</a>
-                <a href="logout.php">Wyloguj</a>
-            </div>
-        </div>
-
-        <a href="cart.php" class="navbar-icon">
-            <img src="assets/img/shopping-cart1.png" alt="Cart" />
-        </a>
-    </div>
-</div>
+<?php require '../includes/navbar.php'; ?>
 
 <div class="side-menu" id="sideMenu">
     <div class="slide-menu-content">
@@ -140,6 +115,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['update_address'])) {
 <script src="assets/js/script_profile_dropdown.js"></script>
 <script src="assets/js/script_burger_menu.js"></script>
 <script src="assets/js/script_profile.js"></script>
+<script src="assets/js/script_cart_dropdown.js"></script>
 </body>
 </html>
 

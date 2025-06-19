@@ -34,27 +34,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     <link href="https://fonts.googleapis.com/css2?family=Roboto:ital,wght@0,100..900;1,100..900&display=swap" rel="stylesheet">
 </head>
 <body>
-    <div class="navbar">
-        <div class="navbar-start">
-            <div class="burger-menu" id="burgerToggle">
-                <img src="assets/img/burger-menu-white.png" id="burgerIcon">
-            </div>
-            <h1>
-                <a href="landing_page.php" class="logo-link">moko.store</a>
-            </h1>
-        </div>
-
-        <div class="navbar-end">
-        </div>
-    </div>
-
-    <div class="side-menu" id="sideMenu">
-        <div class="slide-menu-content">
-            <a href="landing_page.php">Strona główna</a>
-            <a href="products.php">Produkty</a>
-            <a href="contact.php">Kontakt</a>
-        </div>
-    </div>
+<?php require '../includes/navbar.php'; ?>
     <div class="login-box">
         <div class="login">
             <h1>Logowanie</h1>
@@ -70,5 +50,6 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         </div>
     </div>
     <script src="assets/js/script_burger_menu.js"></script>
+    <script src="assets/js/script_cart_dropdown.js"></script>
 </body>
 </html>
