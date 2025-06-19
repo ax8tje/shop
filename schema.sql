@@ -54,6 +54,7 @@ CREATE TABLE orders (
   postal_code VARCHAR(20)      NOT NULL,
   country     VARCHAR(100)     NOT NULL,
   total       DECIMAL(10,2)    NOT NULL,
+  status      ENUM('new','paid','shipped','closed') NOT NULL DEFAULT 'new',
   created_at  TIMESTAMP        NOT NULL DEFAULT CURRENT_TIMESTAMP,
   CONSTRAINT fk_orders_user
     FOREIGN KEY (user_id) REFERENCES users(id)
