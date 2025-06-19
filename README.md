@@ -22,3 +22,13 @@ The script defines the following tables:
 - `order_items` – items that belong to an order
 
 See `schema.sql` for the full definition of each table and their columns.
+
+## Updating database schema
+
+The application expects the `users` table to include fields such as `address`, `city`, `postal_code`, and `country`. After you update the codebase, run the schema script again or apply equivalent `ALTER TABLE` commands:
+
+```bash
+mysql -u <user> -p < schema.sql
+```
+
+Failing to do so can lead to errors like `Unknown column 'address'` when the application tries to access missing fields.
