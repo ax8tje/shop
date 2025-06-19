@@ -1044,3 +1044,35 @@ html, body {
     padding: 0.3rem 0;
     border-bottom: 1px solid rgba(58,48,18,0.4);
 }
+
+.profile-wrapper {
+    position: relative;
+}
+
+.profile-dropdown {
+    position: absolute;
+    top: 100%;
+    right: 0;
+    background-color: #2f2f14;
+    border: 1px solid #ccc;
+    border-radius: 4px;
+    display: none;
+    flex-direction: column;
+    min-width: 120px;
+    z-index: 1500;
+}
+
+.profile-dropdown a {
+    color: #E7EFC7;
+    padding: 8px 12px;
+    text-decoration: none;
+    white-space: nowrap;
+}
+
+.profile-dropdown a:hover {
+    background-color: #45451f;
+}
+
+.profile-dropdown.show {
+    display: flex;
+}

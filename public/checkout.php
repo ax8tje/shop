@@ -86,8 +86,18 @@ if ($_SERVER['REQUEST_METHOD']==='POST') {
             <h1><a href="landing_page.php" class="logo-link">moko.store</a></h1>
         </div>
         <div class="navbar-end">
-            <a href="profile.php" class="navbar-icon"><img src="assets/img/profile-icon.png" alt="Profile"></a>
-            <a href="cart.php"    class="navbar-icon"><img src="assets/img/shopping-cart1.png" alt="Cart"></a>
+            <div class="profile-wrapper">
+                <a href="#" id="profileToggle" class="navbar-icon">
+                    <img src="assets/img/profile-icon.png" alt="Profile">
+                </a>
+                <div id="profileDropdown" class="profile-dropdown">
+                    <a href="profile.php">Profil</a>
+                    <a href="logout.php">Wyloguj</a>
+                </div>
+            </div>
+            <a href="cart.php" class="navbar-icon">
+                <img src="assets/img/shopping-cart1.png" alt="Cart">
+            </a>
         </div>
     </div>
 
@@ -175,5 +185,7 @@ if ($_SERVER['REQUEST_METHOD']==='POST') {
         </div>
     </div>
 </footer>
+<script src="assets/js/script_profile_dropdown.js"></script>
+<script src="assets/js/script_burger_menu.js"></script>
 </body>
 </html>

@@ -71,6 +71,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             <p>Masz konto? <a href="login.php">Zaloguj się</a></p>
         </div>
     <div>
-    <script src="assets/js/script_burger_menu.js"></script>
+        <script src="assets/js/script_profile_dropdown.js"></script>
+        <script src="assets/js/script_burger_menu.js"></script>
 </body>
 </html>
