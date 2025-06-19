@@ -103,5 +103,6 @@
 </footer>
 <script src="assets/js/script_landing_animations.js"></script>
 <script src="assets/js/script_burger_menu.js"></script>
+<script src="assets/js/script_profile_dropdown.js"></script>
 </body>
 </html>
