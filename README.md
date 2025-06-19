@@ -32,3 +32,11 @@ mysql -u <user> -p < schema.sql
 ```
 
 Failing to do so can lead to errors like `Unknown column 'address'` when the application tries to access missing fields.
+
+
+## Password reset functionality
+
+Users who forget their password can request a reset link from `forgot_password.php`.
+The script stores a hashed token in the `password_resets` table and sends an e-mail
+with a link to `reset_password.php`. Tokens expire after one hour. Once the
+password is changed the token is removed from the database.
