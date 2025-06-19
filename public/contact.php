@@ -11,7 +11,7 @@ require_once '../includes/sidebar.php';
     <link href="https://fonts.googleapis.com/css2?family=Roboto:ital,wght@0,100..900;1,100..900&display=swap" rel="stylesheet">
 </head>
 <body>
-    <div class="main-content"></div>
+    <div class="main-content">
     <?php require '../includes/navbar.php'; ?>
 
         <div class="side-menu" id="sideMenu">
