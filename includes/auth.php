@@ -47,7 +47,7 @@ function isAdmin() {
 function requireAdmin(): void {
     if (!isAdmin()) {
         if (!isLoggedIn()) {
-            header('Location: /login.php');
+            header('Location: ../public/login.php');
             exit;
         }
         http_response_code(403);
@@ -126,7 +126,7 @@ function resetPassword(int $userId, string $newPassword): void {
 
 function requireLogin(): void {
     if (!isLoggedIn()) {
-        header('Location: /login.php');
+        header('Location: ../public/login.php');
         exit;
     }
 }
