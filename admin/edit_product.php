@@ -25,8 +25,8 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     if ($productModel->update($id, $_POST, $_FILES['images'] ?? [], $errors)) {
         header('Location: edit_product.php?id=' . $id);
         exit;
-        $message = implode(' ', $errors);
     }
+    $message = implode(' ', $errors);
 }
 
 $categories = $productModel->listCategories();

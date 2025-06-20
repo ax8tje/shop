@@ -32,7 +32,7 @@ $cartTotal  = calculateCartTotal($cartItems);
             <div class="burger-menu" id="burgerToggle">
                 <img src="<?= $basePath ?>assets/img/burger-menu-white.png" id="burgerIcon" alt="Menu">
             </div>
-            <h1><a href="landing_page.php" class="logo-link">moko.store</a></h1>
+            <h1><a href="<?= $basePath ?>landing_page.php" class="logo-link">moko.store</a></h1>
         </div>
         <div class="navbar-end">
             <div class="profile-wrapper">

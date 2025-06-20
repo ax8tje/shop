@@ -14,8 +14,8 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     if ($pid) {
         header('Location: edit_product.php?id=' . $pid);
         exit;
-        $message = implode(' ', $errors);
     }
+    $message = implode(' ', $errors);
 }
 
 $categories = $productModel->listCategories();

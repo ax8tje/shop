@@ -12,7 +12,7 @@ $total = calculateCartTotal($items);
         <div class="burger-menu" id="burgerToggle">
             <img src="assets/img/burger-menu-white.png" id="burgerIcon" alt="Menu">
         </div>
-        <h1><a href="/public/landing_page.php" class="logo-link">moko.store</a></h1>
+        <h1><a href="landing_page.php" class="logo-link">moko.store</a></h1>
     </div>
     <div class="navbar-end">
         <div class="profile-wrapper">
@@ -23,7 +23,7 @@ $total = calculateCartTotal($items);
                 <a href="../public/profile.php">Profil</a>
                 <a href="../public/logout.php">Wyloguj</a>
                 <?php if (isAdmin()): ?>
-                    <a href="/admin/dashboard.php">Panel admina</a>
+                    <a href="../admin/dashboard.php">Panel admina</a>
                 <?php endif; ?>
             </div>
         </div>
