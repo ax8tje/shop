@@ -15,8 +15,18 @@ document.addEventListener('DOMContentLoaded', () => {
         let thumbnailIndex = 0;
         const maxVisibleThumbs = 5;
 
+        let slideWidth = 0;
+
+        function setDimensions() {
+            slideWidth = slider.clientWidth;
+            sliderImages.style.width = `${slideWidth * images.length}px`;
+            images.forEach(img => {
+                img.style.width = `${slideWidth}px`;
+            });
+        }
+
         function updateSlider() {
-            const offset = -currentIndex * 600;
+            const offset = -currentIndex * slideWidth;
             sliderImages.style.transform = `translateX(${offset}px)`;
 
             thumbnails.forEach((thumb, index) => {
@@ -65,6 +75,8 @@ document.addEventListener('DOMContentLoaded', () => {
             }
         });
 
+        setDimensions();
+        window.addEventListener('resize', setDimensions);
         updateSlider();
     });
 });
