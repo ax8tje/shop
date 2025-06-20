@@ -1,3 +1,4 @@
+</div>
 <footer class="footer">
     <div class="footer-container">
         <div class="footer-contact">
@@ -16,3 +17,9 @@
         </div>
     </div>
 </footer>
+<?php if (!empty($pageScripts)):
+    foreach ($pageScripts as $s): ?>
+        <script src="<?= htmlspecialchars($s) ?>"></script>
+    <?php endforeach; endif; ?>
+</body>
+</html>
