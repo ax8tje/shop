@@ -1,45 +1,24 @@
 <?php
 require_once '../includes/auth.php';
 require_once '../includes/db.php';
+require_once '../includes/product.php';
 
 requireAdmin();
 
 $message = '';
+$productModel = new Product($pdo, __DIR__ . '/../public/assets/img');
 
 if ($_SERVER['REQUEST_METHOD'] === 'POST') {
-    $title       = trim($_POST['title'] ?? '');
-    $price       = $_POST['price'] ?? '';
-    $quantity    = (int)($_POST['quantity'] ?? 0);
-    $description = trim($_POST['description'] ?? '');
-    $category    = $_POST['category'] === '' ? null : (int)$_POST['category'];
-
-    if ($title !== '' && $price !== '' && $description !== '') {
-        $stmt = $pdo->prepare('INSERT INTO products (title, price, quantity, description, category_id) VALUES (?,?,?,?,?)');
-        $stmt->execute([$title, $price, $quantity, $description, $category]);
-        $pid = $pdo->lastInsertId();
-
-        if (!empty($_FILES['images']['name'][0])) {
-            $uploadDir = __DIR__ . '/../public/assets/img/';
-            foreach ($_FILES['images']['tmp_name'] as $idx => $tmp) {
-                if ($_FILES['images']['error'][$idx] === UPLOAD_ERR_OK) {
-                    $name = basename($_FILES['images']['name'][$idx]);
-                    $target = $uploadDir . $name;
-                    if (move_uploaded_file($tmp, $target)) {
-                        $pdo->prepare('INSERT INTO product_images (product_id, image_path) VALUES (?,?)')
-                            ->execute([$pid, $name]);
-                    }
-                }
-            }
-        }
-
+    $errors = [];
+    $pid = $productModel->create($_POST, $_FILES['images'] ?? [], $errors);
+    if ($pid) {
         header('Location: edit_product.php?id=' . $pid);
         exit;
-    } else {
-        $message = 'Wszystkie pola oprócz kategorii są wymagane.';
+        $message = implode(' ', $errors);
     }
 }
 
-$categories = $pdo->query('SELECT id, name FROM categories ORDER BY name')->fetchAll();
+$categories = $productModel->listCategories();
 ?>
 <!DOCTYPE html>
 <html lang="pl">

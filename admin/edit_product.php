@@ -1,6 +1,7 @@
 <?php
 require_once '../includes/auth.php';
 require_once '../includes/db.php';
+require_once '../includes/product.php';
 
 requireAdmin();
 
@@ -9,10 +10,9 @@ if (!$id) {
     header('Location: dashboard.php');
     exit;
 }
+$productModel = new Product($pdo, __DIR__ . '/../public/assets/img');
 
-$stmt = $pdo->prepare('SELECT * FROM products WHERE id = ?');
-$stmt->execute([$id]);
-$product = $stmt->fetch();
+$product = $productModel->get($id);
 if (!$product) {
     header('Location: dashboard.php');
     exit;
@@ -21,41 +21,16 @@ if (!$product) {
 $message = '';
 
 if ($_SERVER['REQUEST_METHOD'] === 'POST') {
-    $title       = trim($_POST['title'] ?? '');
-    $price       = $_POST['price'] ?? '';
-    $quantity    = (int)($_POST['quantity'] ?? 0);
-    $description = trim($_POST['description'] ?? '');
-    $category    = $_POST['category'] === '' ? null : (int)$_POST['category'];
-
-    if ($title !== '' && $price !== '' && $description !== '') {
-        $pdo->prepare('UPDATE products SET title=?, price=?, quantity=?, description=?, category_id=? WHERE id=?')
-            ->execute([$title, $price, $quantity, $description, $category, $id]);
-
-        if (!empty($_FILES['images']['name'][0])) {
-            $uploadDir = __DIR__ . '/../public/assets/img/';
-            foreach ($_FILES['images']['tmp_name'] as $idx => $tmp) {
-                if ($_FILES['images']['error'][$idx] === UPLOAD_ERR_OK) {
-                    $name = basename($_FILES['images']['name'][$idx]);
-                    $target = $uploadDir . $name;
-                    if (move_uploaded_file($tmp, $target)) {
-                        $pdo->prepare('INSERT INTO product_images (product_id, image_path) VALUES (?,?)')
-                            ->execute([$id, $name]);
-                    }
-                }
-            }
-        }
-
+    $errors = [];
+    if ($productModel->update($id, $_POST, $_FILES['images'] ?? [], $errors)) {
         header('Location: edit_product.php?id=' . $id);
         exit;
-    } else {
-        $message = 'Wszystkie pola oprócz kategorii są wymagane.';
+        $message = implode(' ', $errors);
     }
 }
 
-$categories = $pdo->query('SELECT id, name FROM categories ORDER BY name')->fetchAll();
-$imgStmt = $pdo->prepare('SELECT id, image_path FROM product_images WHERE product_id = ?');
-$imgStmt->execute([$id]);
-$images = $imgStmt->fetchAll();
+$categories = $productModel->listCategories();
+$images = $product['images'];
 ?>
 
 <!DOCTYPE html>

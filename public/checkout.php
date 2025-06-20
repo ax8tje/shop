@@ -49,23 +49,18 @@ if ($_SERVER['REQUEST_METHOD']==='POST') {
 
     if (empty($errors)) {
         // 2) Zapis do orders
-        $stmt = $pdo->prepare("
-          INSERT INTO orders
-            (user_id, full_name, email, address, city, postal_code, country, total)
-          VALUES
-            (:uid, :fn, :email, :addr, :city, :zip, :country, :total)
-        ");
-        $stmt->execute([
-            'uid'     => $_SESSION['user_id'] ?? null,
-            'fn'      => $fn,
-            'email'   => $email,
-            'addr'    => $addr,
-            'city'    => $city,
-            'zip'     => $zip,
-            'country' => $country,
-            'total'   => $total
+        $order = new Order([
+            'user_id'     => $_SESSION['user_id'] ?? null,
+            'full_name'   => $fn,
+            'email'       => $email,
+            'address'     => $addr,
+            'city'        => $city,
+            'postal_code' => $zip,
+            'country'     => $country,
+            'total'       => $total
         ]);
-        $orderId = $pdo->lastInsertId();
+        $order->save($pdo);
+        $orderId = $order->id;
 
         if (isset($_SESSION['user_id'])) {
             updateUserAddress($_SESSION['user_id'], [
@@ -78,19 +73,14 @@ if ($_SERVER['REQUEST_METHOD']==='POST') {
         }
 
         // 3) Zapis pozycji
-        $stmtItem = $pdo->prepare("
-          INSERT INTO order_items
-            (order_id, product_id, quantity, price)
-          VALUES
-            (:oid, :pid, :qty, :price)
-        ");
         foreach ($items as $item) {
-            $stmtItem->execute([
-                'oid'   => $orderId,
-                'pid'   => $item['id'],
-                'qty'   => $item['quantity'],
-                'price' => $item['price']
+            $oi = new OrderItem([
+                'order_id'   => $orderId,
+                'product_id' => $item['id'],
+                'quantity'   => $item['quantity'],
+                'price'      => $item['price']
             ]);
+            $oi->save($pdo);
         }
 
         // 4) Opróżnij koszyk i przekieruj na potwierdzenie

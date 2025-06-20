@@ -5,35 +5,18 @@ if (session_status() === PHP_SESSION_NONE) {
 require_once 'db.php';
 
 function registerUser($email, $password) {
-    global $pdo;
-
-    $stmt = $pdo->prepare("SELECT id FROM users WHERE email = ?");
-    $stmt->execute([$email]);
-    if($stmt->fetch()){
-        return "Użytkownik z takim adresem e-mail już istnieje.";
-    }
-
-    $hashedPassword = password_hash($password, PASSWORD_DEFAULT);
-
-    $stmt = $pdo->prepare("INSERT INTO users (email, password, role) VALUES (?, ?, 'user')");
-    $stmt->execute([$email, $hashedPassword]);
-
-    return true;
+    return User::register($pdo, $email, $password);
 }
 
 function loginUser($email, $password) {
     global $pdo;
-    $stmt = $pdo->prepare("SELECT id, password, role FROM users WHERE email = ?");
-    $stmt->execute([$email]);
-    $user = $stmt->fetch();
-
-    if (!$user || !password_verify($password, $user['password'])) {
+    $user = User::authenticate($pdo, $email, $password);
+    if (!$user) {
         return "Nieprawidłowy e-mail lub hasło.";
     }
-
     session_regenerate_id(true);
-    $_SESSION['user_id']   = $user['id'];
-    $_SESSION['user_role'] = $user['role'];
+    $_SESSION['user_id']   = $user->id;
+    $_SESSION['user_role'] = $user->role;
 
     return true;
 }
@@ -65,27 +48,12 @@ function logoutUser() {
 
 function getUserAddress(int $userId): ?array {
     global $pdo;
-    $stmt = $pdo->prepare(
-        'SELECT full_name, address, city, postal_code, country, email FROM users WHERE id = ?'
-    );
-    $stmt->execute([$userId]);
-    $addr = $stmt->fetch(PDO::FETCH_ASSOC);
-    return $addr ?: null;
+    return User::getAddress($pdo, $userId);
 }
 
 function updateUserAddress(int $userId, array $data): void {
     global $pdo;
-    $stmt = $pdo->prepare(
-        'UPDATE users SET full_name = :fn, address = :addr, city = :city, postal_code = :zip, country = :country WHERE id = :id'
-    );
-    $stmt->execute([
-        'fn' => $data['full_name'],
-        'addr' => $data['address'],
-        'city' => $data['city'],
-        'zip' => $data['postal_code'],
-        'country' => $data['country'],
-        'id' => $userId
-    ]);
+    User::updateAddress($pdo, $userId, $data);
 }
 
 function createPasswordResetToken(string $email): bool {
@@ -121,8 +89,7 @@ function validatePasswordResetToken(string $token): ?int {
 
 function resetPassword(int $userId, string $newPassword): void {
     global $pdo;
-    $hash = password_hash($newPassword, PASSWORD_DEFAULT);
-    $pdo->prepare('UPDATE users SET password = ? WHERE id = ?')->execute([$hash, $userId]);
+    User::resetPassword($pdo, $userId, $newPassword);
     $pdo->prepare('DELETE FROM password_resets WHERE user_id = ?')->execute([$userId]);
 }
 

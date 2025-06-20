@@ -17,19 +17,14 @@ if (!isset($_GET['id'])) {
 
 $pid = (int)$_GET['id'];
 
-$stmt = $pdo->prepare("SELECT * FROM products WHERE id = ?");
-$stmt->execute([$pid]);
-$product = $stmt->fetch();
+$product = Product::findById($pdo, $pid);
 
 if (!$product) {
     echo "Nie znaleziono produktu.";
     exit;
 }
 
-$stmt_imgs = $pdo->prepare("SELECT image_path FROM product_images WHERE product_id = ?");
-$stmt_imgs->execute([$pid]);
-$images = $stmt_imgs->fetchAll(PDO::FETCH_COLUMN);
-$product['images'] = $images;
+$images = $product->images($pdo);
 
 if (!isset($_SESSION['recently_viewed'])) {
     $_SESSION['recently_viewed'] = [];
@@ -53,7 +48,7 @@ setcookie($cookieName, json_encode($cookieData), time() + 60*60*24*30, '/');
 <html lang="pl">
 <head>
     <meta charset="UTF-8" />
-    <title><?= htmlspecialchars($product['title']) ?> – MOKO</title>
+    <title><?= htmlspecialchars($product->title) ?> – MOKO</title>
     <link rel="stylesheet" href="assets/css/style.css" />
     <link href="https://fonts.googleapis.com/css2?family=Roboto:ital,wght@0,100..900;1,100..900&display=swap" rel="stylesheet">
 </head>
@@ -73,9 +68,9 @@ setcookie($cookieName, json_encode($cookieData), time() + 60*60*24*30, '/');
             <div class="image-slider2">
                 <button class="slide-arrow2 left-arrow2">&lt;</button>
                 <div class="slider-images">
-                    <?php foreach ($product['images'] as $img): ?>
+                    <?php foreach ($images as $img): ?>
                         <img src="assets/img/<?php echo htmlspecialchars($img); ?>"
-                             alt="<?php echo htmlspecialchars($product['title']); ?>"
+                             alt="<?php echo htmlspecialchars($product->title); ?>"
                              class="slide-image2" />
                     <?php endforeach; ?>
                 </div>
@@ -84,7 +79,7 @@ setcookie($cookieName, json_encode($cookieData), time() + 60*60*24*30, '/');
             <div class="thumbnail-slider-wrapper">
                 <button class="thumb-arrow left-thumb">&lt;</button>
                 <div class="thumbnail-slider">
-                    <?php foreach ($product['images'] as $index => $img): ?>
+                    <?php foreach ($images as $index => $img): ?>
                         <img
                                 src="assets/img/<?php echo htmlspecialchars($img); ?>"
                                 class="thumbnail-image <?php echo $index === 0 ? 'active-thumbnail' : ''; ?>"
@@ -97,9 +92,9 @@ setcookie($cookieName, json_encode($cookieData), time() + 60*60*24*30, '/');
         </div>
 
         <div class="product-details">
-            <h1 class="product-title"><?= htmlspecialchars($product['title']) ?></h1>
-            <p class="product-description"><?= nl2br(htmlspecialchars($product['description'])) ?></p>
-            <p class="product-price"><strong>Cena:</strong> <?= number_format($product['price'], 2) ?> zł</p>
+            <h1 class="product-title"><?= htmlspecialchars($product->title) ?></h1>
+            <p class="product-description"><?= nl2br(htmlspecialchars($product->description)) ?></p>
+            <p class="product-price"><strong>Cena:</strong> <?= number_format($product->price, 2) ?> zł</p>
             <form method="post" class="buy-form">
                 <input type="hidden" name="buy_id" value="<?= $pid ?>">
                 <button type="submit" class="buy-button">Dodaj do koszyka</button>
