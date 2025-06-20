@@ -80,6 +80,7 @@ require '../views/header.php';
             <label>Rola:
                 <select name="role">
                     <option value="user" <?= ($user['role'] ?? '') === 'user' ? 'selected' : '' ?>>user</option>
+                    <option value="seller" <?= ($user['role'] ?? '') === 'seller' ? 'selected' : '' ?>>seller</option>
                     <option value="admin" <?= ($user['role'] ?? '') === 'admin' ? 'selected' : '' ?>>admin</option>
                 </select>
             </label><br>

@@ -1,9 +1,6 @@
 <?php
 require_once '../includes/auth.php';
-if (!isAdmin()) {
-    header('Location: ../public/login.php');
-    exit;
-}
+requireSeller();
 $pageTitle = 'Dodaj produkt';
 $pageScripts = [
     "assets/js/script_burger_menu.js",

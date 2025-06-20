@@ -3,7 +3,7 @@ require_once '../includes/auth.php';
 require_once '../includes/db.php';
 require_once '../includes/product.php';
 
-requireAdmin();
+requireSeller();
 
 $message = '';
 $productModel = new Product($pdo, __DIR__ . '/../public/assets/img');

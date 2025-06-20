@@ -22,7 +22,7 @@ $total = calculateCartTotal($items);
             <div id="profileDropdown" class="profile-dropdown">
                 <a href="../public/profile.php">Profil</a>
                 <a href="../public/logout.php">Wyloguj</a>
-                <?php if (isAdmin()): ?>
+                <?php if (isAdmin() || isSeller()): ?>
                     <a href="../admin/dashboard.php">Panel admina</a>
                 <?php endif; ?>
             </div>

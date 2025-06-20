@@ -43,7 +43,7 @@ $cartTotal  = calculateCartTotal($cartItems);
                 <div id="profileDropdown" class="profile-dropdown">
                     <a href="<?= $basePath ?>profile.php">Profil</a>
                     <a href="<?= $basePath ?>logout.php">Wyloguj</a>
-                    <?php if (isAdmin()): ?>
+                    <?php if (isAdmin() || isSeller()): ?>
                         <a href="/admin/dashboard.php">Panel admina</a>
                     <?php endif; ?>
                 </div>

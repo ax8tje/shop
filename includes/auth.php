@@ -29,8 +29,24 @@ function isAdmin() {
     return isset($_SESSION['user_role']) && $_SESSION['user_role'] === 'admin';
 }
 
+function isSeller() {
+    return isset($_SESSION['user_role']) && $_SESSION['user_role'] === 'seller';
+}
+
 function requireAdmin(): void {
     if (!isAdmin()) {
+        if (!isLoggedIn()) {
+            header('Location: ../public/login.php');
+            exit;
+        }
+        http_response_code(403);
+        echo 'Brak uprawnień do tej strony.';
+        exit;
+    }
+}
+
+function requireSeller(): void {
+    if (!isSeller() && !isAdmin()) {
         if (!isLoggedIn()) {
             header('Location: ../public/login.php');
             exit;

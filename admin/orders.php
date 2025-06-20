@@ -2,7 +2,7 @@
 require_once '../includes/auth.php';
 require_once '../includes/db.php';
 
-requireAdmin();
+requireSeller();
 
 $action = $_GET['action'] ?? '';
 $id = isset($_GET['id']) ? (int)$_GET['id'] : 0;
@@ -11,7 +11,13 @@ $message = '';
 if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['update_status'])) {
     $oid = (int)$_POST['order_id'];
     $status = $_POST['status'] ?? 'new';
-    $pdo->prepare('UPDATE orders SET status = ? WHERE id = ?')->execute([$status, $oid]);
+    $allowed = ['new', 'paid', 'shipped'];
+    if (isAdmin() || isSeller()) {
+        $allowed[] = 'closed';
+    }
+    if (in_array($status, $allowed, true)) {
+        $pdo->prepare('UPDATE orders SET status = ? WHERE id = ?')->execute([$status, $oid]);
+    }
     header('Location: orders.php');
     exit;
 }
