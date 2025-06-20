@@ -1135,3 +1135,10 @@ html, body {
 .cart-dropdown a:hover {
     background-color: #45451f;
 }
+
+.admin-content {
+    margin-top: 5rem;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+}
