@@ -62,7 +62,8 @@ html, body {
 }
 .image-slider2 {
     position: relative;
-    width: 100%;
+    width: 600px;
+    height: 600px;
     aspect-ratio: 1 / 1;
     overflow: hidden;
     margin-bottom: 15px;
@@ -799,7 +800,7 @@ html, body {
 }
 
 .product-page-box .image-section {
-    flex: 0 0 400px;
+    flex: 0 0 600px;
     display: flex;
     flex-direction: column;
     gap: 1rem;

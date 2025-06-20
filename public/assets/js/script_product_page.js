@@ -15,10 +15,9 @@ document.addEventListener('DOMContentLoaded', () => {
         let thumbnailIndex = 0;
         const maxVisibleThumbs = 5;
 
-        let slideWidth = 0;
+        const slideWidth = 600;
 
         function setDimensions() {
-            slideWidth = slider.clientWidth;
             sliderImages.style.width = `${slideWidth * images.length}px`;
             images.forEach(img => {
                 img.style.width = `${slideWidth}px`;
@@ -76,7 +75,6 @@ document.addEventListener('DOMContentLoaded', () => {
         });
 
         setDimensions();
-        window.addEventListener('resize', setDimensions);
         updateSlider();
     });
 });
