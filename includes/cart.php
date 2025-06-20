@@ -1,6 +1,17 @@
 <?php
 
+function expireCartIfInactive(): void {
+    if (isset($_SESSION['cart_last_active']) && time() - $_SESSION['cart_last_active'] > 1800) {
+        clearCart();
+    }
+}
+
+function updateCartActivity(): void {
+    $_SESSION['cart_last_active'] = time();
+}
+
 function addToCart(int $productId, int $quantity = 1): void {
+    expireCartIfInactive();
     if (!isset($_SESSION['cart'])) {
         $_SESSION['cart'] = [];
     }
@@ -9,24 +20,33 @@ function addToCart(int $productId, int $quantity = 1): void {
     } else {
         $_SESSION['cart'][$productId] = $quantity;
     }
+    updateCartActivity();
 }
 
 function updateCartItem(int $productId, int $quantity): void {
-    if (!isset($_SESSION['cart'])) return;
+    expireCartIfInactive();
+    if (!isset($_SESSION['cart'])) {
+        updateCartActivity();
+        return;
+    }
     if ($quantity > 0) {
         $_SESSION['cart'][$productId] = $quantity;
     } else {
         unset($_SESSION['cart'][$productId]);
     }
+    updateCartActivity();
 }
 
 function removeCartItem(int $productId): void {
+    expireCartIfInactive();
     if (isset($_SESSION['cart'][$productId])) {
         unset($_SESSION['cart'][$productId]);
     }
+    updateCartActivity();
 }
 
 function getCartItems(PDO $pdo): array {
+    expireCartIfInactive();
     $items = $_SESSION['cart'] ?? [];
     $result = [];
     foreach ($items as $productId => $qty) {
@@ -42,17 +62,21 @@ function getCartItems(PDO $pdo): array {
             $result[] = $p;
         }
     }
+    updateCartActivity();
     return $result;
 }
 
 function calculateCartTotal(array $items): float {
+    expireCartIfInactive();
     $sum = 0;
     foreach ($items as $it) {
         $sum += $it['price'] * $it['quantity'];
     }
+    updateCartActivity();
     return $sum;
 }
 
 function clearCart(): void {
     unset($_SESSION['cart']);
+    updateCartActivity();
 }
