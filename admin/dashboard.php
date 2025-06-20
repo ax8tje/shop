@@ -14,9 +14,9 @@ if (!isAdmin()) {
 <body>
 <h1>Panel administracyjny</h1>
 <ul>
-    <li><a href="add_product.php">Zarządzaj produktami</a></li>
-    <li><a href="users.php">Zarządzaj użytkownikami</a></li>
-    <li><a href="orders.php">Zarządzaj zamówieniami</a></li>
+    <li><a href="../admin/add_product.php">Zarządzaj produktami</a></li>
+    <li><a href="../admin/users.php">Zarządzaj użytkownikami</a></li>
+    <li><a href="../admin/orders.php">Zarządzaj zamówieniami</a></li>
 </ul>
 </body>
 </html>
