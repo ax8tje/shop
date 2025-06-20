@@ -10,6 +10,12 @@ $action = $_GET['action'] ?? '';
 $id = isset($_GET['id']) ? (int)$_GET['id'] : 0;
 $message = '';
 
+if ($action === 'delete' && $id) {
+    $pdo->prepare('DELETE FROM orders WHERE id = ?')->execute([$id]);
+    header('Location: orders.php');
+    exit;
+}
+
 if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['update_status'])) {
     $oid = (int)$_POST['order_id'];
     $status = $_POST['status'] ?? 'new';
@@ -83,7 +89,9 @@ require '../views/header.php';
                             <button type="submit" name="update_status">OK</button>
                         </form>
                     </td>
-                    <td><a href="orders.php?action=view&id=<?= $o['id'] ?>">Szczegóły</a></td>
+                    <td>
+                        <a href="orders.php?action=view&id=<?= $o['id'] ?>">Szczegóły</a> |
+                        <a href="orders.php?action=delete&id=<?= $o['id'] ?>" onclick="return confirm('Usunąć zamówienie?');">Usuń</a>
                 </tr>
             <?php endforeach; ?>
         </table>
