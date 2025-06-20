@@ -4,6 +4,8 @@ class User {
     public string $email;
     public string $password;
     public string $role;
+    public int $email_verified;
+    public ?string $verification_token;
     public ?string $full_name;
     public ?string $address;
     public ?string $city;
@@ -11,11 +13,14 @@ class User {
     public ?string $country;
     public ?string $created_at;
 
+
     public function __construct(array $data = []) {
         $this->id = isset($data['id']) ? (int)$data['id'] : null;
         $this->email = $data['email'] ?? '';
         $this->password = $data['password'] ?? '';
         $this->role = $data['role'] ?? 'user';
+        $this->email_verified = isset($data['email_verified']) ? (int)$data['email_verified'] : 0;
+        $this->verification_token = $data['verification_token'] ?? null;
         $this->full_name = $data['full_name'] ?? null;
         $this->address = $data['address'] ?? null;
         $this->city = $data['city'] ?? null;
@@ -45,11 +50,13 @@ class User {
 
     public function save(PDO $pdo): void {
         if ($this->id) {
-            $stmt = $pdo->prepare('UPDATE users SET email=:email, password=:password, role=:role, full_name=:full_name, address=:address, city=:city, postal_code=:postal_code, country=:country WHERE id=:id');
+            $stmt = $pdo->prepare('UPDATE users SET email=:email, password=:password, role=:role, email_verified=:email_verified, verification_token=:verification_token, full_name=:full_name, address=:address, city=:city, postal_code=:postal_code, country=:country WHERE id=:id');
             $stmt->execute([
                 'email'=>$this->email,
                 'password'=>$this->password,
                 'role'=>$this->role,
+                'email_verified'=>$this->email_verified,
+                'verification_token'=>$this->verification_token,
                 'full_name'=>$this->full_name,
                 'address'=>$this->address,
                 'city'=>$this->city,
@@ -58,11 +65,13 @@ class User {
                 'id'=>$this->id
             ]);
         } else {
-            $stmt = $pdo->prepare('INSERT INTO users (email, password, role, full_name, address, city, postal_code, country) VALUES (:email, :password, :role, :full_name, :address, :city, :postal_code, :country)');
+            $stmt = $pdo->prepare('INSERT INTO users (email, password, role, email_verified, verification_token, full_name, address, city, postal_code, country) VALUES (:email, :password, :role, :email_verified, :verification_token, :full_name, :address, :city, :postal_code, :country)');
             $stmt->execute([
                 'email'=>$this->email,
                 'password'=>$this->password,
                 'role'=>$this->role,
+                'email_verified'=>$this->email_verified,
+                'verification_token'=>$this->verification_token,
                 'full_name'=>$this->full_name,
                 'address'=>$this->address,
                 'city'=>$this->city,
@@ -84,7 +93,14 @@ class User {
         if (self::findByEmail($pdo, $email)) {
             return 'Użytkownik z takim adresem e-mail już istnieje.';
         }
-        $user = new self(['email'=>$email, 'password'=>password_hash($password, PASSWORD_DEFAULT), 'role'=>'user']);
+        $token = bin2hex(random_bytes(16));
+        $user = new self([
+            'email' => $email,
+            'password' => password_hash($password, PASSWORD_DEFAULT),
+            'role' => 'user',
+            'verification_token' => $token,
+            'email_verified' => 0
+        ]);
         $user->save($pdo);
         return true;
     }
@@ -126,5 +142,19 @@ class User {
         if (!$u) return;
         $u->password = password_hash($newPassword, PASSWORD_DEFAULT);
         $u->save($pdo);
+    }
+
+    public static function verifyByToken(PDO $pdo, string $token): bool {
+        $stmt = $pdo->prepare('SELECT * FROM users WHERE verification_token = ?');
+        $stmt->execute([$token]);
+        $row = $stmt->fetch(PDO::FETCH_ASSOC);
+        if (!$row) {
+            return false;
+        }
+        $user = new self($row);
+        $user->email_verified = 1;
+        $user->verification_token = null;
+        $user->save($pdo);
+        return true;
     }
 }

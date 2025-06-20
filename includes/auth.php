@@ -6,7 +6,17 @@ require_once 'db.php';
 require_once 'log.php';
 
 function registerUser($email, $password) {
-    return User::register($pdo, $email, $password);
+    global $pdo;
+    $result = User::register($pdo, $email, $password);
+    if ($result === true) {
+        $user = User::findByEmail($pdo, $email);
+        if ($user && $user->verification_token) {
+            $host = $_SERVER['HTTP_HOST'] ?? 'localhost';
+            $link = sprintf('http://%s/verify_email.php?token=%s', $host, $user->verification_token);
+            @mail($email, 'Weryfikacja adresu e-mail', "Kliknij w link aby potwierdzić e-mail: $link");
+        }
+    }
+    return $result;
 }
 
 function loginUser($email, $password) {
@@ -14,6 +24,9 @@ function loginUser($email, $password) {
     $user = User::authenticate($pdo, $email, $password);
     if (!$user) {
         return "Nieprawidłowy e-mail lub hasło.";
+    }
+    if (!$user->email_verified) {
+        return "Adres e-mail nie został zweryfikowany.";
     }
     session_regenerate_id(true);
     $_SESSION['user_id']   = $user->id;
