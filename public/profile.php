@@ -51,8 +51,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['update_address'])) {
     <link href="https://fonts.googleapis.com/css2?family=Roboto:ital,wght@0,100..900;1,100..900&display=swap" rel="stylesheet">
 </head>
 <body>
-<?php require '../includes/navbar.php'; ?>
-
+<?php require '../views/navbar.php'; ?>
 <div class="side-menu" id="sideMenu">
     <div class="slide-menu-content">
         <a href="landing_page.php">Strona główna</a>

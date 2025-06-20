@@ -114,7 +114,7 @@ if (!empty($_SESSION['recently_viewed'])) {
 </head>
 <body>
 <div class="main-content">
-    <?php require '../includes/navbar.php'; ?>
+    <?php require '../views/navbar.php'; ?>
     <div class="side-menu" id="sideMenu">
         <div class="slide-menu-content">
             <a href="landing_page.php">Strona główna</a>

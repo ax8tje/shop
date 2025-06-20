@@ -49,7 +49,7 @@ if (!empty($recentIds)) {
 </head>
 <body>
 <div class="main-content">
-    <?php require '../includes/navbar.php'; ?>
+    <?php require '../views/navbar.php'; ?>
 
     <div class="side-menu" id="sideMenu">
         <div class="slide-menu-content">

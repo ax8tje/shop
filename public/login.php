@@ -34,7 +34,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     <link href="https://fonts.googleapis.com/css2?family=Roboto:ital,wght@0,100..900;1,100..900&display=swap" rel="stylesheet">
 </head>
 <body>
-<?php require '../includes/navbar.php'; ?>
+<?php require '../views/navbar.php'; ?>
 <div class="login-box">
     <div class="login">
         <h1>Logowanie</h1>

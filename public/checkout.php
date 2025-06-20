@@ -101,9 +101,8 @@ if ($_SERVER['REQUEST_METHOD']==='POST') {
 <body>
 <div class="main-content">
     <div class="navbar">
-        <?php require '../includes/navbar.php'; ?>
+        <?php require '../views/navbar.php'; ?>
     </div>
-
     <div class="side-menu" id="sideMenu">
         <div class="slide-menu-content">
             <a href="landing_page.php">Strona główna</a>
