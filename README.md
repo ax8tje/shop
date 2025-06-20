@@ -57,6 +57,14 @@ The script stores a hashed token in the `password_resets` table and sends an e-m
 with a link to `reset_password.php`. Tokens expire after one hour. Once the
 password is changed the token is removed from the database.
 
+## Email verification
+
+During registration the application generates a verification token for every new
+user. The token is stored in the `users` table together with the `email_verified`
+flag. `register.php` sends an e-mail containing a link to
+`verify_email.php?token=...`. Until the link is visited and the token validated,
+login attempts will be rejected.
+
 ## REST API
 
 The application exposes a simple read-only API for products.
