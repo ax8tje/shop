@@ -5,8 +5,7 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="b75b8fa6-d41b-48f8-94c2-da93cd017d6d" name="Changes" comment="">
-      <change afterPath="$PROJECT_DIR$/admin/log.php" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/admin/logs.php" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/dataSources/cab57adb-80ac-4d09-bd1b-494ca722d344.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/dataSources/cab57adb-80ac-4d09-bd1b-494ca722d344.xml" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -68,6 +67,7 @@
 }]]></component>
   <component name="RecentsManager">
     <key name="MoveFile.RECENT_KEYS">
+      <recent name="C:\Users\StasK\Documents\GitHub\shop\includes" />
       <recent name="C:\Users\StasK\Documents\GitHub\shop\views" />
       <recent name="C:\Users\StasK\Documents\GitHub\shop\views\forms" />
       <recent name="C:\Users\StasK\Documents\GitHub\shop\public" />
@@ -105,7 +105,7 @@
       <workItem from="1750239970160" duration="6195000" />
       <workItem from="1750254940249" duration="8937000" />
       <workItem from="1750339469806" duration="11816000" />
-      <workItem from="1750416032182" duration="13894000" />
+      <workItem from="1750416032182" duration="14207000" />
     </task>
     <servers />
   </component>

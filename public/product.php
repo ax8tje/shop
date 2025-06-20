@@ -114,7 +114,7 @@ require '../views/header.php';
     <h2>Opinie</h2>
     <?php foreach ($reviews as $rev): ?>
         <div class="review">
-            <p><strong><?= htmlspecialchars($rev['full_name']) ?></strong> - <?= (int)$rev['rating'] ?>/5
+            <p><strong><?= htmlspecialchars($rev['email']) ?></strong> - <?= (int)$rev['rating'] ?>/5
                 <em><?= htmlspecialchars($rev['created_at']) ?></em></p>
             <p><?= nl2br(htmlspecialchars($rev['comment'])) ?></p>
         </div>
