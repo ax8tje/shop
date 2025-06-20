@@ -48,7 +48,20 @@ if ($_SERVER['REQUEST_METHOD']==='POST') {
     if ($country==='') $errors['country']   = 'Podaj kraj.';
 
     if (empty($errors)) {
-        // 2) Zapis do orders
+        // 2) Sprawdzenie stanu magazynowego
+        foreach ($items as $item) {
+            $stmt = $pdo->prepare('SELECT quantity FROM products WHERE id = ?');
+            $stmt->execute([$item['id']]);
+            $available = (int)$stmt->fetchColumn();
+            if ($available < $item['quantity']) {
+                $errors['stock'] = 'Brak wystarczającej liczby sztuk produktu ' . $item['title'] . '.';
+                break;
+            }
+        }
+    }
+
+    if (empty($errors)) {
+        // 3) Zapis do orders
         $order = new Order([
             'user_id'     => $_SESSION['user_id'] ?? null,
             'full_name'   => $fn,
@@ -73,7 +86,7 @@ if ($_SERVER['REQUEST_METHOD']==='POST') {
             ]);
         }
 
-        // 3) Zapis pozycji
+        // 4) Zapis pozycji
         foreach ($items as $item) {
             $oi = new OrderItem([
                 'order_id'   => $orderId,
@@ -84,7 +97,7 @@ if ($_SERVER['REQUEST_METHOD']==='POST') {
             $oi->save($pdo);
         }
 
-        // 4) Opróżnij koszyk i przekieruj na potwierdzenie
+        // 5) Opróżnij koszyk i przekieruj na potwierdzenie
         clearCart();  // funkcja w includes/cart.php
         header("Location: success.php?order={$orderId}");
         exit;
