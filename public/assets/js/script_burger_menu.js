@@ -11,7 +11,7 @@ document.addEventListener('DOMContentLoaded', () => {
         sideMenu.classList.toggle('active');
 
         burgerIcon.src = menuOpen
-            ? 'assets/img/burger-menu-left-white.png'
-            : 'assets/img/burger-menu-white.png';
+            ? `${base}assets/img/burger-menu-left-white.png`
+            : `${base}assets/img/burger-menu-white.png`;
     });
 });

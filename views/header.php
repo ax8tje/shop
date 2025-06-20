@@ -24,6 +24,7 @@ $cartTotal  = calculateCartTotal($cartItems);
     <title><?= htmlspecialchars($pageTitle) ?> – MOKO</title>
     <link rel="stylesheet" href="<?= $basePath ?>assets/css/style.css" />
     <link href="https://fonts.googleapis.com/css2?family=Roboto:ital,wght@0,100..900;1,100..900&display=swap" rel="stylesheet">
+    <script>window.BASE_PATH = <?= json_encode($basePath) ?>;</script>
 </head>
 <body>
 <div class="main-content">
@@ -40,8 +41,8 @@ $cartTotal  = calculateCartTotal($cartItems);
                     <img src="<?= $basePath ?>assets/img/profile-icon.png" alt="Profile">
                 </a>
                 <div id="profileDropdown" class="profile-dropdown">
-                    <a href="profile.php">Profil</a>
-                    <a href="logout.php">Wyloguj</a>
+                    <a href="<?= $basePath ?>profile.php">Profil</a>
+                    <a href="<?= $basePath ?>logout.php">Wyloguj</a>
                     <?php if (isAdmin()): ?>
                         <a href="/admin/dashboard.php">Panel admina</a>
                     <?php endif; ?>

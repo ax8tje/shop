@@ -4,8 +4,6 @@ if (!isAdmin()) {
     header('Location: ../public/login.php');
     exit;
 }
-?>
-<?php
 $pageTitle = 'Dodaj produkt';
 $pageScripts = [
     "assets/js/script_burger_menu.js",

@@ -19,7 +19,7 @@
 </footer>
 <?php if (!empty($pageScripts)):
     foreach ($pageScripts as $s): ?>
-        <script src="<?= htmlspecialchars($s) ?>"></script>
+        <script src="<?= htmlspecialchars($basePath . $s) ?>"></script>
     <?php endforeach; endif; ?>
 </body>
 </html>
