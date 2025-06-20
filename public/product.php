@@ -25,6 +25,19 @@ if (!$product) {
 
 $images = $product->images($pdo);
 
+$stmt = $pdo->prepare('SELECT pr.rating, pr.comment, pr.created_at, u.email
+                        FROM product_reviews pr
+                        JOIN users u ON pr.user_id = u.id
+                        WHERE pr.product_id = ?
+                        ORDER BY pr.created_at DESC');
+$stmt->execute([$pid]);
+$reviews = $stmt->fetchAll(PDO::FETCH_ASSOC);
+
+$avgStmt = $pdo->prepare('SELECT AVG(rating) FROM product_reviews WHERE product_id = ?');
+$avgStmt->execute([$pid]);
+$avgRating = $avgStmt->fetchColumn();
+
+
 if (!isset($_SESSION['recently_viewed'])) {
     $_SESSION['recently_viewed'] = [];
 }
@@ -84,12 +97,49 @@ require '../views/header.php';
             <h1 class="product-title"><?= htmlspecialchars($product->title) ?></h1>
             <p class="product-description"><?= nl2br(htmlspecialchars($product->description)) ?></p>
             <p class="product-price"><strong>Cena:</strong> <?= number_format($product->price, 2) ?> zł</p>
+            <p class="product-rating"><strong>Średnia ocena:</strong>
+                <?php if ($avgRating !== null): ?>
+                    <?= number_format($avgRating, 1) ?>/5
+                <?php else: ?>
+                    brak
+                <?php endif; ?>
+            </p>
             <form method="post" class="buy-form">
                 <input type="hidden" name="buy_id" value="<?= $pid ?>">
                 <button type="submit" class="buy-button">Dodaj do koszyka</button>
             </form>
         </div>
     </div>
+<div class="reviews-section">
+    <h2>Opinie</h2>
+    <?php foreach ($reviews as $rev): ?>
+        <div class="review">
+            <p><strong><?= htmlspecialchars($rev['full_name']) ?></strong> - <?= (int)$rev['rating'] ?>/5
+                <em><?= htmlspecialchars($rev['created_at']) ?></em></p>
+            <p><?= nl2br(htmlspecialchars($rev['comment'])) ?></p>
+        </div>
+    <?php endforeach; ?>
+
+    <?php if (isLoggedIn()): ?>
+        <h3>Dodaj opinię</h3>
+        <form method="post" action="add_review.php">
+            <input type="hidden" name="product_id" value="<?= $pid ?>">
+            <label>Ocena:
+                <select name="rating">
+                    <?php for ($i = 5; $i >= 1; $i--): ?>
+                        <option value="<?= $i ?>"><?= $i ?></option>
+                    <?php endfor; ?>
+                </select>
+            </label><br>
+            <label>Komentarz:<br>
+                <textarea name="comment" required></textarea>
+            </label><br>
+            <button type="submit">Wyślij</button>
+        </form>
+    <?php else: ?>
+        <p>Aby dodać opinię, <a href="login.php">zaloguj się</a>.</p>
+    <?php endif; ?>
+</div>
 <?php
 require '../views/footer.php';
 ?>
