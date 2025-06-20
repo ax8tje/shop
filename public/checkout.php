@@ -2,6 +2,7 @@
 require_once '../includes/db.php';
 require_once '../includes/cart.php';
 require_once '../includes/auth.php';
+require_once '../includes/log.php';
 
 requireLogin();
 
@@ -60,6 +61,7 @@ if ($_SERVER['REQUEST_METHOD']==='POST') {
         ]);
         $order->save($pdo);
         $orderId = $order->id;
+        addLog($_SESSION['user_id'] ?? null, 'new_order', 'ID ' . $orderId);
 
         if (isset($_SESSION['user_id'])) {
             updateUserAddress($_SESSION['user_id'], [

@@ -3,6 +3,7 @@ if (session_status() === PHP_SESSION_NONE) {
     session_start();
 }
 require_once 'db.php';
+require_once 'log.php';
 
 function registerUser($email, $password) {
     return User::register($pdo, $email, $password);
@@ -17,6 +18,7 @@ function loginUser($email, $password) {
     session_regenerate_id(true);
     $_SESSION['user_id']   = $user->id;
     $_SESSION['user_role'] = $user->role;
+    addLog($user->id, 'login', $_SERVER['REMOTE_ADDR'] ?? '');
 
     return true;
 }
@@ -58,6 +60,10 @@ function requireSeller(): void {
 }
 
 function logoutUser() {
+    $uid = $_SESSION['user_id'] ?? null;
+    if ($uid) {
+        addLog($uid, 'logout', '');
+    }
     session_unset();
     session_destroy();
 }

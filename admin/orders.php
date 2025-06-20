@@ -1,6 +1,8 @@
 <?php
 require_once '../includes/auth.php';
 require_once '../includes/db.php';
+require_once '../includes/log.php';
+
 
 requireSeller();
 
@@ -17,6 +19,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['update_status'])) {
     }
     if (in_array($status, $allowed, true)) {
         $pdo->prepare('UPDATE orders SET status = ? WHERE id = ?')->execute([$status, $oid]);
+        addLog($_SESSION['user_id'] ?? null, 'order_status', "{$oid} => {$status}");
     }
     header('Location: orders.php');
     exit;

@@ -2,6 +2,7 @@
 require_once '../includes/auth.php';
 require_once '../includes/db.php';
 require_once '../includes/product.php';
+require_once '../includes/log.php';
 
 requireSeller();
 
@@ -23,6 +24,7 @@ $message = '';
 if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     $errors = [];
     if ($productModel->update($id, $_POST, $_FILES['images'] ?? [], $errors)) {
+        addLog($_SESSION['user_id'] ?? null, 'edit_product', 'ID ' . $id);
         header('Location: edit_product.php?id=' . $id);
         exit;
     }

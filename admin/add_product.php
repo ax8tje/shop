@@ -2,6 +2,8 @@
 require_once '../includes/auth.php';
 require_once '../includes/db.php';
 require_once '../includes/product.php';
+require_once '../includes/log.php';
+
 
 requireSeller();
 
@@ -12,6 +14,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     $errors = [];
     $pid = $productModel->create($_POST, $_FILES['images'] ?? [], $errors);
     if ($pid) {
+        addLog($_SESSION['user_id'] ?? null, 'add_product', 'ID ' . $pid);
         header('Location: edit_product.php?id=' . $pid);
         exit;
     }

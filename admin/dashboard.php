@@ -16,6 +16,7 @@ require '../views/header.php';
         <li><a href="../admin/edit_product.php">Edytuj produkty</a></li>
         <li><a href="../admin/users.php">Zarządzaj użytkownikami</a></li>
         <li><a href="../admin/orders.php">Zarządzaj zamówieniami</a></li>
+        <li><a href="../admin/logs.php">Logi systemowe</a></li>
     </ul>
 </div>
 <?php
