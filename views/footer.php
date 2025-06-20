@@ -8,9 +8,9 @@
         </div>
         <div class="footer-social">
             <h3>Znajdź nas</h3>
-            <a href="#" aria-label="Facebook" class="social-link"><img src="assets/img/facebook.png" alt="Facebook" /></a>
-            <a href="#" aria-label="Instagram" class="social-link"><img src="assets/img/instagram.png" alt="Instagram" /></a>
-            <a href="#" aria-label="Pinterest" class="social-link"><img src="assets/img/pinterest.png" alt="Pinterest" /></a>
+            <a href="#" aria-label="Facebook" class="social-link"><img src="../assets/img/facebook.png" alt="Facebook" /></a>
+            <a href="#" aria-label="Instagram" class="social-link"><img src="../assets/img/instagram.png" alt="Instagram" /></a>
+            <a href="#" aria-label="Pinterest" class="social-link"><img src="../assets/img/pinterest.png" alt="Pinterest" /></a>
         </div>
         <div class="footer-copy">
             <p>© 2025 moko.store. Wszelkie prawa zastrzeżone.</p>
