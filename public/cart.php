@@ -33,6 +33,7 @@ require '../views/header.php';
                     <tr>
                         <th>Produkt</th>
                         <th>Nazwa</th>
+                        <th>Ilość</th>
                         <th>Cena</th>
                         <th>Usuń</th>
                     </tr>
@@ -46,6 +47,7 @@ require '../views/header.php';
                                      width="80">
                             </td>
                             <td><?= htmlspecialchars($item['title']) ?></td>
+                            <td><?= (int)$item['quantity'] ?></td>
                             <td><?= number_format($item['price'], 2) ?> zł</td>
                             <td>
                                 <form method="post">

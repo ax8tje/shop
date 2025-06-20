@@ -1143,3 +1143,70 @@ html, body {
     flex-direction: column;
     align-items: center;
 }
+
+.address-form {
+    display: flex;
+    flex-direction: column;
+    gap: 0.6rem;
+}
+
+.address-form label {
+    display: flex;
+    flex-direction: column;
+    font-weight: 600;
+    font-size: 14px;
+    color: #3B3B1A;
+}
+
+.address-form input {
+    margin-top: 0;
+    padding: 8px;
+    font-size: 15px;
+    border: 2px solid #3B3B1A;
+    border-radius: 5px;
+    background-color: white;
+    color: #3B3B1A;
+    box-sizing: border-box;
+    transition: border-color 0.3s ease, box-shadow 0.3s ease;
+}
+
+/* Error text styling */
+.error-text {
+    color: #B00020;
+    font-size: 0.9rem;
+    margin-top: 0.2rem;
+}
+
+/* Product details */
+.product-title {
+    margin: 0 0 0.5rem;
+    font-size: 1.5rem;
+    color: #3B3B1A;
+}
+
+.product-description {
+    margin: 0 0 1rem;
+    line-height: 1.4;
+}
+
+.product-price,
+.product-rating {
+    margin: 0.5rem 0;
+    font-weight: 600;
+}
+
+/* Reviews */
+.reviews-section {
+    width: 90%;
+    max-width: 900px;
+    margin: 2rem auto 0 auto;
+}
+
+.review {
+    background: #AEC8A4;
+    border-radius: 8px;
+    padding: 1rem;
+    box-shadow: 0 6px 6px rgba(58, 48, 18, 0.4);
+    box-sizing: border-box;
+    margin-bottom: 1rem;
+}
