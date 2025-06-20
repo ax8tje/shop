@@ -36,6 +36,8 @@ CREATE TABLE users (
   email      VARCHAR(255)     NOT NULL UNIQUE,
   password   VARCHAR(255)     NOT NULL,
   role       ENUM('user','seller','admin') NOT NULL DEFAULT 'user',
+  email_verified TINYINT(1) NOT NULL DEFAULT 0,
+  verification_token CHAR(64) DEFAULT NULL,
   full_name  VARCHAR(255)     DEFAULT NULL,
   address    VARCHAR(255)     DEFAULT NULL,
   city       VARCHAR(100)     DEFAULT NULL,
