@@ -1,6 +1,5 @@
 <?php
 require_once '../includes/auth.php';
-require_once '../includes/sidebar.php';
 
 $message = '';
 
@@ -25,18 +24,13 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         }
     }
 }
+$pageScripts = [
+    "assets/js/script_profile_dropdown.js",
+    "assets/js/script_burger_menu.js",
+    "assets/js/script_cart_dropdown.js",
+];
+require '../views/header.php';
 ?>
-
-<!DOCTYPE html>
-<html lang="pl">
-<head>
-    <meta charset="UTF-8" />
-    <title>MOKO</title>
-    <link rel="stylesheet" href="assets/css/style.css" />
-    <link href="https://fonts.googleapis.com/css2?family=Roboto:ital,wght@0,100..900;1,100..900&display=swap" rel="stylesheet">
-</head>
-<body>
-<?php require '../views/navbar.php'; ?>
     <div class="register-box">
         <div class="register">
             <h1>Rejestracja</h1>
@@ -52,8 +46,6 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             <p>Masz konto? <a href="login.php">Zaloguj się</a></p>
         </div>
     </div>
-        <script src="assets/js/script_profile_dropdown.js"></script>
-        <script src="assets/js/script_burger_menu.js"></script>
-        <script src="assets/js/script_cart_dropdown.js"></script>
-</body>
-</html>
+<?php
+require '../views/footer.php';
+?>

@@ -1,7 +1,6 @@
 <?php
 require_once '../includes/db.php';
 require_once '../includes/auth.php';
-require_once '../includes/sidebar.php';
 
 requireLogin();
 
@@ -41,24 +40,14 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['update_address'])) {
     updateUserAddress($uid, $address);
     $addressUpdated = true;
 }
+$pageScripts = [
+    "assets/js/script_profile_dropdown.js",
+    "assets/js/script_burger_menu.js",
+    "assets/js/script_profile.js",
+    "assets/js/script_cart_dropdown.js",
+];
+require '../views/header.php';
 ?>
-<!DOCTYPE html>
-<html lang="pl">
-<head>
-    <meta charset="UTF-8" />
-    <title>MOKO</title>
-    <link rel="stylesheet" href="assets/css/style.css" />
-    <link href="https://fonts.googleapis.com/css2?family=Roboto:ital,wght@0,100..900;1,100..900&display=swap" rel="stylesheet">
-</head>
-<body>
-<?php require '../views/navbar.php'; ?>
-<div class="side-menu" id="sideMenu">
-    <div class="slide-menu-content">
-        <a href="landing_page.php">Strona główna</a>
-        <a href="products.php">Produkty</a>
-        <a href="contact.php">Kontakt</a>
-    </div>
-</div>
 <main class="profile-container">
     <div class="profile-nav">
         <button data-target="info" class="active">Profil</button>
@@ -107,11 +96,9 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['update_address'])) {
         <?php endif; ?>
     </div>
     <p style="text-align:center; margin-top:1rem;"><a href="logout.php" class="hero-button">Wyloguj się</a></p>
-</main>
-<script src="assets/js/script_profile_dropdown.js"></script>
-<script src="assets/js/script_burger_menu.js"></script>
-<script src="assets/js/script_profile.js"></script>
-<script src="assets/js/script_cart_dropdown.js"></script>
-</body>
-</html>
+
+<?php
+require '../views/footer.php';
+?>
+
 

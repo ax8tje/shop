@@ -2,7 +2,6 @@
 require_once '../includes/auth.php';
 require_once '../includes/db.php';
 require_once '../includes/cart.php';
-require_once '../includes/sidebar.php';
 
 if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['remove_id'])) {
     removeCartItem((int)$_POST['remove_id']);
@@ -12,31 +11,18 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['remove_id'])) {
 
 $items = getCartItems($pdo);
 $total = calculateCartTotal($items);
+$pageScripts = [
+    "assets/js/script_profile_dropdown.js",
+    "assets/js/script_cart_dropdown.js",
+    "assets/js/script_cart_animations.js",
+    "assets/js/script_burger_menu.js",
+];
+require '../views/header.php';
 ?>
-<!DOCTYPE html>
-<html lang="pl">
-<head>
-    <meta charset="UTF-8">
-    <title>Twój koszyk – MOKO</title>
-    <link href="https://fonts.googleapis.com/css2?family=Roboto:ital,wght@0,100..900;1,100..900&display=swap" rel="stylesheet">
-    <link rel="stylesheet" href="assets/css/style.css">
-</head>
-<body>
-<div class="main-content">
-    <?php require '../views/navbar.php'; ?>
-
-    <div class="side-menu" id="sideMenu">
-        <div class="slide-menu-content">
-            <a href="landing_page.php">Strona główna</a>
-            <a href="products.php">Produkty</a>
-            <a href="contact.php">Kontakt</a>
-        </div>
+<main class="cart-container">
+    <div class="title1 hidden">
+        <h1>Twój koszyk</h1>
     </div>
-
-    <main class="cart-container">
-        <div class="title1 hidden">
-            <h1>Twój koszyk</h1>
-        </div>
 
         <?php if (empty($items)): ?>
             <p>Twój koszyk jest pusty. <a href="products.php">Wróć do sklepu</a></p>
@@ -80,36 +66,7 @@ $total = calculateCartTotal($items);
             </div>
         <?php endif; ?>
     </main>
-</div>
-<footer class="footer">
-    <div class="footer-container">
-        <div class="footer-contact">
-            <h3>Kontakt</h3>
-            <p>Email: <a href="mailto:kontakt@moko.store">kontakt@moko.store</a></p>
-            <p>Telefon: <a href="tel:+48123456789">+48 123 456 789</a></p>
-        </div>
 
-        <div class="footer-social">
-            <h3>Znajdź nas</h3>
-            <a href="#" aria-label="Facebook" class="social-link">
-                <img src="assets/img/facebook.png" alt="Facebook" />
-            </a>
-            <a href="#" aria-label="Instagram" class="social-link">
-                <img src="assets/img/instagram.png" alt="Instagram" />
-            </a>
-            <a href="#" aria-label="Pinterest" class="social-link">
-                <img src="assets/img/pinterest.png" alt="Pinterest" />
-            </a>
-        </div>
-
-        <div class="footer-copy">
-            <p>© 2025 moko.store. Wszelkie prawa zastrzeżone.</p>
-        </div>
-    </div>
-</footer>
-<script src="assets/js/script_profile_dropdown.js"></script>
-<script src="assets/js/script_cart_dropdown.js"></script>
-<script src="assets/js/script_cart_animations.js"></script>
-<script src="assets/js/script_burger_menu.js"></script>
-</body>
-</html>
+<?php
+require '../views/footer.php';
+?>
