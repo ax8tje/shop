@@ -33,7 +33,7 @@ $total = calculateCartTotal($items);
             </a>
             <div id="cartDropdown" class="cart-dropdown">
                 Koszyk: <?= $count ?> szt., <?= number_format($total, 2) ?> zł
-                <a href="../includes/cart.php" class="view-cart-link">Pokaż koszyk</a>
+                <a href="../public/cart.php" class="view-cart-link">Pokaż koszyk</a>
             </div>
         </div>
     </div>
